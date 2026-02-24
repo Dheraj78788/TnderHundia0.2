@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up - TenderHub India</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .input-focus { box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); border-color: #6366f1; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.6s ease-out; }
+        .toast { position: fixed; top: 30px; right: 30px; z-index: 10000; transform: translateX(400px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="gradient-bg text-white">
+    <!-- Background Decorations -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute top-1/2 right-1/4 w-80 h-80 bg-purple-300/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s"></div>
+        <div class="absolute bottom-1/4 left-1/2 w-72 h-72 bg-indigo-300/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 4s"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 flex items-center justify-center min-h-screen py-12 px-4">
+        <div class="max-w-4xl w-full flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+            <!-- Branding -->
+            <div class="lg:w-1/2 text-center lg:text-left slide-in">
+                <div class="flex items-center justify-center lg:justify-start mb-8 lg:mb-12">
+                    <i class="fas fa-file-contract text-6xl lg:text-7xl mr-6"></i>
+                    <span class="text-5xl lg:text-6xl font-black bg-gradient-to-r from-white to-indigo-100 bg-clip-text">TenderHub</span>
+                </div>
+                <h1 class="text-4xl lg:text-5xl font-black mb-6 text-white leading-tight">
+                    India's #1 Government<br><span class="text-5xl text-yellow-300">Tenders Platform</span>
+                </h1>
+                <div class="space-y-4 text-xl text-white/90 max-w-md mx-auto lg:mx-0">
+                    <p><i class="fas fa-check-circle text-green-400 mr-3"></i>135+ eProcurement portals</p>
+                    <p><i class="fas fa-check-circle text-green-400 mr-3"></i>Save & track favorite tenders</p>
+                    <p><i class="fas fa-check-circle text-green-400 mr-3"></i>Real-time notifications</p>
+                </div>
+            </div>
+
+            <!-- Auth Form -->
+            <div class="lg:w-1/2 max-w-md w-full glass-effect rounded-4xl p-10 lg:p-12 shadow-3xl border slide-in" style="animation-delay: 0.2s;">
+                <div class="text-center mb-12">
+                    <div class="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                        <i class="fas fa-user-lock text-2xl text-white"></i>
+                    </div>
+                    <h2 id="pageTitle" class="text-4xl font-black text-gray-800 mb-3">Welcome Back</h2>
+                    <p id="pageSubtitle" class="text-xl text-gray-600">Sign in to access your tenders dashboard</p>
+                </div>
+
+                <!-- Loading -->
+                <div id="loadingSpinner" class="hidden flex flex-col items-center justify-center py-20">
+                    <i class="fas fa-spinner fa-spin text-5xl text-indigo-500 mb-6"></i>
+                    <p class="text-xl text-gray-600 font-semibold">Processing...</p>
+                </div>
+
+                <!-- Form -->
+                <form id="authForm" class="space-y-6">
+                    <div class="relative">
+                        <label class="block text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-envelope mr-3 text-indigo-500"></i>Email
+                        </label>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
+                            <input type="email" id="emailInput" required 
+                                   class="w-full pl-16 pr-5 py-5 text-xl border-2 border-gray-200 rounded-3xl focus:outline-none focus:border-indigo-500 input-focus transition-all shadow-lg bg-white/80" 
+                                   placeholder="your.email@company.com">
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <label class="block text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-lock mr-3 text-indigo-500"></i>Password
+                        </label>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
+                            <input type="password" id="passwordInput" required 
+                                   class="w-full pl-16 pr-5 py-5 text-xl border-2 border-gray-200 rounded-3xl focus:outline-none focus:border-indigo-500 input-focus transition-all shadow-lg bg-white/80" 
+                                   placeholder="••••••••">
+                            <button type="button" id="togglePassword" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-200 rounded-2xl">
+                                <i class="fas fa-eye text-gray-500 text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-black py-6 px-8 rounded-3xl text-2xl shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center space-x-3">
+                        <span id="submitText">Sign In</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="relative my-10">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center">
+                        <span class="px-8 bg-white/80 text-lg text-gray-600 font-semibold rounded-2xl">or</span>
+                    </div>
+                </div>
+
+                <button id="googleSignIn" type="button" class="w-full flex items-center justify-center space-x-4 px-8 py-5 border-2 border-gray-300 rounded-3xl hover:border-indigo-400 hover:shadow-xl transition-all bg-white/80 font-semibold text-xl hover:bg-indigo-50">
+                    <i class="fab fa-google text-2xl text-gray-700"></i>
+                    <span>Sign in with Google</span>
+                </button>
+
+                <div class="mt-10 text-center">
+                    <button type="button" id="toggleMode" class="text-xl font-semibold text-indigo-600 hover:text-indigo-700 bg-white/50 px-6 py-3 rounded-3xl transition-all hover:shadow-lg">
+                        <span id="toggleText">Don't have an account?</span> <strong id="toggleAction">Sign Up</strong>
+                    </button>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button type="button" id="forgotPassword" class="text-lg text-red-500 hover:text-red-600 font-semibold underline">Forgot Password?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <!-- 🔥 YOUR REAL FIREBASE CONFIG ✅ -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnrDnOHIi3oNE9bGBDc2IGt64fZiJgpbQ",
+            authDomain: "blink-c30fa.firebaseapp.com",
+            projectId: "blink-c30fa",
+            storageBucket: "blink-c30fa.firebasestorage.app",
+            messagingSenderId: "37798724346",
+            appId: "1:37798724346:web:4374e9cfad34dbd69eff43"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // DOM Elements
+        const authForm = document.getElementById('authForm');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const togglePassword = document.getElementById('togglePassword');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleMode = document.getElementById('toggleMode');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageSubtitle = document.getElementById('pageSubtitle');
+        const submitText = document.getElementById('submitText');
+        const toggleText = document.getElementById('toggleText');
+        const toggleAction = document.getElementById('toggleAction');
+        const googleSignIn = document.getElementById('googleSignIn');
+        const forgotPassword = document.getElementById('forgotPassword');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        let isLoginMode = true;
+
+        // Toggle Password
+        togglePassword.onclick = () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.querySelector('i').className = type === 'password' ? 'fas fa-eye text-gray-500 text-xl' : 'fas fa-eye-slash text-gray-500 text-xl';
+        };
+
+        // Toggle Mode
+        toggleMode.onclick = () => {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                pageTitle.textContent = 'Welcome Back';
+                pageSubtitle.textContent = 'Sign in to access your tenders dashboard';
+                submitText.textContent = 'Sign In';
+                toggleText.textContent = "Don't have an account?";
+                toggleAction.textContent = 'Sign Up';
+            } else {
+                pageTitle.textContent = 'Create Account';
+                pageSubtitle.textContent = 'Join thousands of contractors winning tenders';
+                submitText.textContent = 'Create Account';
+                toggleText.textContent = 'Already have an account?';
+                toggleAction.textContent = 'Sign In';
+            }
+        };
+
+        // Form Submit
+        authForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) return showToast('Please fill all fields', 'error');
+
+            showLoading(true);
+
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await set(ref(db, `users/${userCredential.user.uid}`), {
+                        email, displayName: email.split('@')[0], createdAt: Date.now(), favorites: [], searchHistory: []
+                    });
+                }
+                showToast('Success! Redirecting...', 'success');
+                setTimeout(() => window.location.href = '/tenders', 1500);
+            } catch (error) {
+                const messages = {
+                    'auth/user-not-found': 'No account found',
+                    'auth/wrong-password': 'Wrong password',
+                    'auth/email-already-in-use': 'Email already exists',
+                    'auth/weak-password': 'Password too weak',
+                    'auth/invalid-email': 'Invalid email'
+                };
+                showToast(messages[error.code] || error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        // Google Sign In
+        googleSignIn.onclick = async () => {
+            showLoading(true);
+            try {
+                await signInWithPopup(auth, googleProvider);
+                showToast('Welcome! Redirecting...', 'success');
+                setTimeout(() => window.location.href = '/tenders', 1500);
+            } catch (error) {
+                showToast('Google sign in failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        // Forgot Password
+        forgotPassword.onclick = async () => {
+            const email = emailInput.value.trim();
+            if (!email) return showToast('Enter email first', 'warning');
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showToast('Reset email sent!', 'success');
+            } catch (error) {
+                showToast('Error sending email', 'error');
+            }
+        };
+
+        // Auto-redirect if logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                showToast('Welcome back!', 'success');
+                setTimeout(() => window.location.href = '/tenders', 1000);
+            }
+        });
+
+        function showLoading(show) {
+            loadingSpinner.classList.toggle('hidden', !show);
+            authForm.style.opacity = show ? '0.5' : '1';
+            authForm.style.pointerEvents = show ? 'none' : 'auto';
+            submitBtn.disabled = show;
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast p-6 rounded-3xl shadow-3xl text-white font-semibold text-lg flex items-center space-x-3 ${
+                type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-indigo-500'
+            }`;
+            toast.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i><span>${message}</span>`;
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                toast.style.transform = 'translateX(400px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
