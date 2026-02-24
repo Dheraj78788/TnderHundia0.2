@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Profile - TenderHub India{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h1>{{ user_name }}</h1>
+                <p class="profile-email">{{ user_email }}</p>
+                {% if is_premium %}
+                    <div class="premium-status">
+                        <i class="fas fa-crown"></i>
+                        Premium Member
+                        {% if subscription_date %}
+                            <span>Since {{ subscription_date[:10] }}</span>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="upgrade-cta">
+                        <a href="#" class="btn btn-primary">Upgrade to Premium (₹100/mo)</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-stats">
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div>Saved Tenders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24h</div>
+                <div>Member Since</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div>Active</div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+            </a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

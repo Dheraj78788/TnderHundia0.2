@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Register - TenderHub India{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="fas fa-user-plus fa-3x"></i>
+            <h1>Join TenderHub</h1>
+            <p>Get instant access to ₹70 Lakh Crore tenders</p>
+        </div>
+
+        <form method="POST" class="auth-form" id="registerForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" name="name" required 
+                       placeholder="Dharmendra Vaishnav">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Business Email</label>
+                <input type="email" name="email" required 
+                       placeholder="yourbusiness@email.com">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" required 
+                       placeholder="Create strong password">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Confirm Password</label>
+                <input type="password" name="confirm_password" required 
+                       placeholder="Repeat password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                <i class="fas fa-rocket"></i> Create Account
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <p>Already registered? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>India's #1 Government Tenders Aggregator</h1>
+            <p class="hero-subtitle">
+                Access <strong>₹70 Lakh Crore</strong> worth of tenders from 
+                <strong>135+ portals</strong> (CPPP, Maharashtra, Delhi, Defence & more) 
+                in one unified dashboard.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">8+</div>
+                    <div>Live Portals</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">₹70L Cr</div>
+                    <div>Annual Value</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">500K+</div>
+                    <div>Tenders/Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24×7</div>
+                    <div>Real-time Updates</div>
+                </div>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-rocket"></i> Start Free Trial
+                </a>
+                <a href="{{ url_for('login') }}" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-sign-in-alt"></i> Login Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title">Why Contractors Choose TenderHub?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Real-Time Scraping</h3>
+                <p>Live data from CPPP, state portals, defence tenders using Playwright automation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-filter"></i>
+                </div>
+                <h3>Smart Filtering</h3>
+                <p>Filter by organization, category, value, deadlines, and location instantly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Mobile-First Design</h3>
+                <p>Professional dashboard works perfectly on desktop, tablet, and mobile.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure & Reliable</h3>
+                <p>Firebase authentication, encrypted sessions, and enterprise-grade security.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Subscription Section -->
+<section class="subscription-section">
+    <div class="container">
+        <div class="subscription-card">
+            <div class="premium-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h2>Unlock Premium Access</h2>
+            <div class="price">₹<span class="price-large">100</span>/month</div>
+            <ul class="features-list">
+                <li><i class="fas fa-check"></i> Complete Tender Details</li>
+                <li><i class="fas fa-check"></i> Tender IDs & Reference Numbers</li>
+                <li><i class="fas fa-check"></i> Unlimited Search & Filters</li>
+                <li><i class="fas fa-check"></i> Priority Email Support</li>
+                <li><i class="fas fa-check"></i> Mobile App Access (Coming Soon)</li>
+            </ul>
+            <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg">Get Premium Now</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
