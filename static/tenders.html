@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.6s ease-in; }
-        .toast { position: fixed; top: 20px; right: 20px; z-index: 10000; transform: translateX(400px); transition: all 0.3s ease; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .fade-in-filter {
+            animation: fade 0.4s ease-in-out;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
     </style>
 </head>
+
 <body class="bg-gray-50">
     <!-- Navbar -->
     <nav class="gradient-bg text-white shadow-2xl sticky top-0 z-50">
@@ -31,190 +101,371 @@
                     <a href="/tenders" class="text-indigo-200 font-bold border-b-2 border-indigo-200 pb-1">
                         <i class="fas fa-list mr-2"></i>Tenders
                     </a>
-                    <div class="relative">
-                        <button id="authBtn" class="flex items-center space-x-2 px-6 py-3 bg-white/20 backdrop-blur-sm rounded-2xl hover:bg-white/30 transition-all font-medium">
-                            <i id="authIcon" class="fas fa-user-circle text-xl"></i>
-                            <span id="authText">Sign In</span>
-                        </button>
-                        <div id="userDropdown" class="absolute right-0 mt-3 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 hidden py-2 z-50">
-                            <div class="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-purple-50">
-                                <div id="userName" class="font-bold text-xl text-gray-800 mb-1"></div>
-                                <div id="userEmail" class="text-sm text-gray-600 truncate"></div>
-                            </div>
-                            <a href="#" id="favoritesBtn" class="flex items-center px-6 py-4 hover:bg-indigo-50 border-b border-gray-100">
-                                <i class="fas fa-heart text-red-500 mr-4 text-lg"></i>
-                                <span class="font-medium">My Favorites (<span id="favoritesCount">0</span>)</span>
-                            </a>
-                            <button id="signoutBtn" class="w-full text-left flex items-center px-6 py-4 hover:bg-red-50 text-red-700 font-medium">
-                                <i class="fas fa-sign-out-alt mr-4"></i>Sign Out
-                            </button>
-                        </div>
-                    </div>
+                    <a href="/subscription"
+                        class="px-4 py-2 bg-yellow-400 text-black font-bold rounded-xl hover:bg-yellow-300 transition-all">
+                        <i class="fas fa-crown mr-1"></i>PRO
+                    </a>
+                    <a id="profileLink" href="/profile"
+                        class="flex items-center space-x-2 px-6 py-3 bg-white/20 backdrop-blur-sm rounded-2xl hover:bg-white/30 transition-all font-medium group">
+                        <i id="profileIcon" class="fas fa-user-circle text-xl group-hover:rotate-12 transition-all"></i>
+                        <span id="profileText">Profile</span>
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Auth Modal -->
-    <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden">
-            <div class="p-8 pb-6">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 id="modalTitle" class="text-3xl font-bold text-gray-800">Welcome Back</h2>
-                    <button id="closeModal" class="text-2xl text-gray-500 hover:text-gray-700 p-2 -m-2 rounded-xl hover:bg-gray-100">
-                        <i class="fas fa-times"></i>
+    <div class="flex min-h-screen">
+        <!-- FIXED FILTER SIDEBAR -->
+        <aside
+            class="sidebar w-72 bg-gradient-to-b from-indigo-600 to-purple-600 text-white shadow-2xl p-6 flex flex-col fade-in-filter">
+            <div class="flex items-center gap-3 mb-8">
+                <i class="fas fa-user-circle text-3xl"></i>
+                <div>
+                    <p class="font-semibold text-sm" id="sidebarUserName">Your Name</p>
+                    <p class="text-xs opacity-80 truncate" id="sidebarUserEmail">user@example.com</p>
+                    <span id="sidebarProBadge"
+                        class="hidden px-2 py-1 bg-yellow-400 text-black text-xs font-bold rounded-full ml-2">⭐
+                        PRO</span>
+                </div>
+            </div>
+
+            <h2 class="text-xs uppercase tracking-wide mb-6 opacity-90 font-semibold border-b border-white/30 pb-2">🔍
+                Advanced Filters</h2>
+
+            <div class="space-y-4 flex-1">
+                <!-- Category -->
+                <div>
+                    <label class="block text-xs font-medium mb-2 text-white/90">Category</label>
+                    <input id="filterCategory" placeholder="CIVIL, Electrical, Roadwork..."
+                        class="w-full p-3 rounded-xl bg-white/10 border border-white/30 text-sm placeholder-white/70 text-white focus:ring-2 focus:ring-white focus:outline-none transition-all">
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label class="block text-xs font-medium mb-2 text-white/90">Location</label>
+                    <input id="filterLocation" placeholder="City / State / Division"
+                        class="w-full p-3 rounded-xl bg-white/10 border border-white/30 text-sm placeholder-white/70 text-white focus:ring-2 focus:ring-white focus:outline-none transition-all">
+                </div>
+
+                <!-- Tender Value Range -->
+                <div>
+                    <label class="block text-xs font-medium mb-2 text-white/90">Tender Value (₹)</label>
+                    <div class="space-y-2">
+                        <input id="filterMinValue" type="number" placeholder="Minimum Value (₹)"
+                            class="w-full p-3 rounded-xl bg-white/10 border border-white/30 text-xs placeholder-white/70 text-white focus:ring-2 focus:ring-white focus:outline-none">
+                        <input id="filterMaxValue" type="number" placeholder="Maximum Value (₹)"
+                            class="w-full p-3 rounded-xl bg-white/10 border border-white/30 text-xs placeholder-white/70 text-white focus:ring-2 focus:ring-white focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <div>
+                    <label class="block text-xs font-medium mb-2 text-white/90">Closing Date Range</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input id="filterClosingFrom" type="date"
+                            class="p-3 rounded-xl bg-white/10 border border-white/30 text-xs text-white focus:ring-2 focus:ring-white focus:outline-none">
+                        <input id="filterClosingTo" type="date"
+                            class="p-3 rounded-xl bg-white/10 border border-white/30 text-xs text-white focus:ring-2 focus:ring-white focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Tender Type -->
+                <div>
+                    <label class="block text-xs font-medium mb-2 text-white/90">Tender Type</label>
+                    <select id="filterTenderType"
+                        class="w-full p-3 rounded-xl bg-white/10 border border-white/30 text-xs text-white focus:ring-2 focus:ring-white focus:outline-none">
+                        <option value="">All Types</option>
+                        <option value="open">Open Tender</option>
+                        <option value="limited">Limited Tender</option>
+                        <option value="eoi">Expression of Interest</option>
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="space-y-3 mt-8 pt-6 border-t border-white/20">
+                    <button onclick="applyAdvancedFilters()"
+                        class="w-full bg-white text-indigo-600 py-3 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl hover:bg-blue-50 transition-all">
+                        <i class="fas fa-filter mr-2"></i>Apply Filters
+                    </button>
+                    <button onclick="resetAdvancedFilters()"
+                        class="w-full bg-white/20 border border-white/50 text-white py-3 rounded-xl text-sm font-semibold hover:bg-white/30 transition-all">
+                        Reset All
                     </button>
                 </div>
-                <form id="authForm" class="space-y-6">
-                    <div>
-                        <input type="email" id="emailInput" required placeholder="Email" 
-                               class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none text-lg">
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1">
+            <div id="toastContainer"></div>
+
+            <!-- Header -->
+            <header class="gradient-bg text-white py-20 mb-0">
+                <div class="container mx-auto px-6 text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4">All Government Tenders</h1>
+                    <p class="text-xl opacity-90 mb-6">Live data from <span class="font-bold text-yellow-300">8 Major
+                            Gov Websites</span></p>
+                </div>
+            </header>
+
+            <!-- Search + Stats -->
+            <section class="container mx-auto px-6 py-12">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/40 mb-8">
+                        <div class="relative">
+                            <input type="text" id="searchInput"
+                                placeholder="🔍 Search by title, organization, tender ID, location..."
+                                class="w-full p-4 pl-14 text-lg border-2 border-gray-200 rounded-2xl focus:border-indigo-500 focus:outline-none shadow-lg">
+                            <i
+                                class="fas fa-search absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
-                    <div>
-                        <input type="password" id="passwordInput" required placeholder="Password" 
-                               class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none text-lg">
-                    </div>
-                    <button type="submit" id="submitAuth" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl text-xl shadow-xl hover:shadow-2xl transition-all">
-                        <span id="authBtnText">Sign In</span>
-                    </button>
-                </form>
-                <div class="relative my-8">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-300"></div>
-                    </div>
-                    <div class="relative flex justify-center">
-                        <span class="px-4 bg-white text-sm text-gray-500">or</span>
+
+                    <div
+                        class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 bg-white/80 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-white/40">
+                        <div class="text-center">
+                            <div id="totalTenders" class="text-3xl font-bold text-indigo-600 mb-1">0</div>
+                            <div class="text-gray-600 font-medium">Total Tenders</div>
+                        </div>
+                        <div class="text-center">
+                            <div id="activeTenders" class="text-3xl font-bold text-green-600 mb-1">0</div>
+                            <div class="text-gray-600 font-medium">Active</div>
+                        </div>
+                        <div class="text-center">
+                            <div id="closingSoon" class="text-3xl font-bold text-orange-600 mb-1">0</div>
+                            <div class="text-gray-600 font-medium">Closing Soon</div>
+                        </div>
+                        <div class="text-center">
+                            <div id="totalOrgs" class="text-3xl font-bold text-purple-600 mb-1">0</div>
+                            <div class="text-gray-600 font-medium">Organizations</div>
+                        </div>
                     </div>
                 </div>
-                <button id="googleSignIn" class="w-full flex items-center justify-center gap-3 px-6 py-4 border-2 border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-lg bg-white font-medium">
-                    <i class="fab fa-google text-xl"></i>
-                    <span>Continue with Google</span>
-                </button>
-                <div class="mt-8 text-center">
-                    <button id="toggleAuth" class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">Don't have account? <strong>Sign Up</strong></button>
+            </section>
+
+            <!-- Tenders Grid -->
+            <section class="container mx-auto px-6 pb-20">
+                <div id="loading" class="text-center py-20">
+                    <i class="fas fa-spinner fa-spin text-5xl text-indigo-600 mb-6"></i>
+                    <p class="text-xl text-gray-600">Loading tenders from 8 Gov Websites...</p>
+                </div>
+                <div id="noResults" class="hidden text-center py-20">
+                    <i class="fas fa-inbox text-6xl text-gray-300 mb-6"></i>
+                    <h3 class="text-3xl font-bold text-gray-500 mb-4">No tenders found</h3>
+                    <p class="text-gray-500">Try different search terms or filters</p>
+                </div>
+                <div id="tendersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 🔥 PRO SUBSCRIPTION MODAL -->
+    <div id="proModal" class="fixed inset-0 z-50 hidden modal-overlay flex items-center justify-center p-6">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8 text-center">
+                <div
+                    class="w-24 h-24 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                    <i class="fas fa-crown text-3xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">🔒 PRO Features Required</h2>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Upgrade to <span class="font-bold text-indigo-600 bg-indigo-100 px-2 py-1 rounded-lg">PRO</span> to
+                    unlock:<br>
+                    • Full Tender IDs & Copy<br>
+                    • Complete Tender Detail Pages<br>
+                    • Unlimited Access
+                </p>
+                <div class="space-y-4">
+                    <a href="/subscription"
+                        class="block w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all">
+                        <i class="fas fa-rocket mr-2"></i>Upgrade to PRO Now
+                    </a>
+                    <button onclick="closeProModal()"
+                        class="w-full border-2 border-gray-300 text-gray-700 font-semibold py-3 px-8 rounded-2xl hover:bg-gray-50 transition-all">
+                        Continue Free
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toastContainer"></div>
-
-    <!-- Header -->
-    <header class="gradient-bg text-white py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4">All Government Tenders</h1>
-            <p class="text-xl opacity-90">Live data from 135+ eProcurement portals • Save favorites with your account</p>
-        </div>
-    </header>
-
-    <!-- Search & Filters (YOUR ORIGINAL CODE) -->
-    <section class="container mx-auto px-6 py-12">
-        <div class="max-w-6xl mx-auto">
-            <div class="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 mb-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="relative">
-                        <input type="text" id="searchInput" placeholder="🔍 Search by title, organization, tender ID..." 
-                               class="w-full p-5 pl-14 text-lg border-2 border-gray-200 rounded-2xl focus:border-indigo-500 focus:outline-none shadow-lg">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <select id="siteFilter" class="p-5 border-2 border-gray-200 rounded-xl focus:border-indigo-500">
-                            <option value="">All Sites</option>
-                        </select>
-                        <select id="orgFilter" class="p-5 border-2 border-gray-200 rounded-xl focus:border-indigo-500">
-                            <option value="">All Organizations</option>
-                        </select>
-                    </div>
-                    <div class="flex gap-4">
-                        <button id="filterBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all">
-                            <i class="fas fa-magic mr-2"></i>Filter
+    <!-- 🔥 TENDER DETAIL MODAL (PRO ONLY) -->
+    <div id="tenderDetailModal" class="fixed inset-0 z-50 hidden modal-overlay flex items-center justify-center p-6">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800" id="detailTitle">Tender Details</h2>
+                    <div class="flex gap-3">
+                        <button onclick="copyTenderId()"
+                            class="p-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl hover:scale-105 transition-all">
+                            <i class="fas fa-copy"></i>
                         </button>
-                        <button id="clearBtn" class="px-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-5 rounded-xl shadow-lg hover:shadow-xl transition-all">
-                            Clear
+                        <button onclick="closeTenderDetail()"
+                            class="p-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl hover:scale-105 transition-all">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 bg-white rounded-2xl p-8 shadow-xl">
-                <div class="text-center">
-                    <div id="totalTenders" class="text-3xl font-bold text-indigo-600 mb-1">0</div>
-                    <div class="text-gray-600 font-medium">Total Tenders</div>
-                </div>
-                <div class="text-center">
-                    <div id="activeTenders" class="text-3xl font-bold text-green-600 mb-1">0</div>
-                    <div class="text-gray-600 font-medium">Active</div>
-                </div>
-                <div class="text-center">
-                    <div id="closingSoon" class="text-3xl font-bold text-orange-600 mb-1">0</div>
-                    <div class="text-gray-600 font-medium">Closing Soon</div>
-                </div>
-                <div class="text-center">
-                    <div id="totalOrgs" class="text-3xl font-bold text-purple-600 mb-1">0</div>
-                    <div class="text-gray-600 font-medium">Organizations</div>
-                </div>
+                <div id="tenderDetailContent"></div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Tenders Grid -->
-    <section class="container mx-auto px-6 pb-20">
-        <div id="loading" class="text-center py-20">
-            <i class="fas fa-spinner fa-spin text-5xl text-indigo-600 mb-6"></i>
-            <p class="text-xl text-gray-600">Loading tenders from Flask API...</p>
-        </div>
-        <div id="noResults" class="hidden text-center py-20">
-            <i class="fas fa-inbox text-6xl text-gray-300 mb-6"></i>
-            <h3 class="text-3xl font-bold text-gray-500 mb-4">No tenders found</h3>
-            <p class="text-gray-500">Try different search terms or filters</p>
-        </div>
-        <div id="tendersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    </section>
-
-    <!-- Firebase + Flask Complete Script -->
+    <!-- COMPLETE JavaScript -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getDatabase, ref, set, get, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getAuth, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-        // 🔥 REPLACE WITH YOUR FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com/",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyBnrDnOHIi3oNE9bGBDc2IGt64fZiJgpbQ",
+            authDomain: "blink-c30fa.firebaseapp.com",
+            projectId: "blink-c30fa",
+            storageBucket: "blink-c30fa.firebasestorage.app",
+            messagingSenderId: "37798724346",
+            appId: "1:37798724346:web:4374e9cfad34dbd69eff43"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getDatabase(app);
-        const googleProvider = new GoogleAuthProvider();
 
-        let allTenders = [], currentTenders = [], currentUser = null, userFavorites = new Set();
+        let allTenders = [], currentTenders = [], currentUser = null, isProUser = false, userFavorites = new Set();
 
-        // Load tenders from Flask API or local JSON
+        // 🔥 CHECK PRO STATUS - FIXED API CALL
+        async function checkProStatus() {
+
+            if (!currentUser) return;
+
+            try {
+
+                const uid = currentUser.uid;
+
+                const idToken = await currentUser.getIdToken();
+
+                const response = await fetch(`/api/subscription/status?userId=${uid}`, {
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                console.log("PRO STATUS:", data);
+
+                if (data.isPro === true || data.plan === "pro") {
+
+                    isProUser = true;
+
+                } else {
+
+                    isProUser = false;
+
+                }
+
+                updateProUI();
+
+            } catch (e) {
+
+                console.log("Pro status error:", e);
+
+                isProUser = false;
+
+            }
+        }
+
+
+        function updateProUI() {
+
+            const proBadge = document.getElementById('sidebarProBadge');
+            const proBtn = document.querySelector('a[href="/subscription"]');
+
+            if (isProUser) {
+
+                // show badge
+                proBadge.classList.remove('hidden');
+
+                // hide PRO button in navbar
+                if (proBtn) proBtn.style.display = "none";
+
+            } else {
+
+                proBadge.classList.add('hidden');
+
+                // show PRO button
+                if (proBtn) proBtn.style.display = "inline-block";
+
+            }
+        }
+
+        // 🔥 ADVANCED FILTER FUNCTION
+        function advancedFilterTenders(tenders) {
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+            const category = document.getElementById('filterCategory').value.toLowerCase().trim();
+            const location = document.getElementById('filterLocation').value.toLowerCase().trim();
+            const minValue = parseFloat(document.getElementById('filterMinValue').value) || 0;
+            const maxValue = parseFloat(document.getElementById('filterMaxValue').value) || Infinity;
+            const closingFrom = document.getElementById('filterClosingFrom').value;
+            const closingTo = document.getElementById('filterClosingTo').value;
+            const tenderType = document.getElementById('filterTenderType').value.toLowerCase();
+
+            return tenders.filter(tender => {
+                const title = (tender.details?.work_details?.Title || '').toLowerCase();
+                const orgName = tender.organisation.toLowerCase();
+                const tenderId = (tender.details?.basic_details?.['Tender ID'] || '').toLowerCase();
+                const description = JSON.stringify(tender).toLowerCase();
+
+                const matchesSearch = !search || title.includes(search) || orgName.includes(search) || tenderId.includes(search) || description.includes(search);
+                const matchesCategory = !category || title.includes(category) || description.includes(category);
+                const matchesLocation = !location || orgName.includes(location) || description.includes(location);
+
+                const tenderValueMatch = description.match(/₹?([\d,]+\.?\d*)/i);
+                const tenderValue = tenderValueMatch ? parseFloat(tenderValueMatch[1].replace(/,/g, '')) : 0;
+                const matchesValue = tenderValue >= minValue && tenderValue <= maxValue;
+
+                const closingDate = new Date(tender.closing_date);
+                const matchesClosingFrom = !closingFrom || closingDate >= new Date(closingFrom);
+                const matchesClosingTo = !closingTo || closingDate <= new Date(closingTo);
+
+                const matchesType = !tenderType || description.includes(tenderType);
+
+                return matchesSearch && matchesCategory && matchesLocation && matchesValue &&
+                    matchesClosingFrom && matchesClosingTo && matchesType;
+            });
+        }
+
+        window.applyAdvancedFilters = () => {
+            currentTenders = advancedFilterTenders(allTenders);
+            renderTenders(currentTenders);
+            showToast('Filters applied successfully! 🎯');
+        };
+
+        window.resetAdvancedFilters = () => {
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterLocation').value = '';
+            document.getElementById('filterMinValue').value = '';
+            document.getElementById('filterMaxValue').value = '';
+            document.getElementById('filterClosingFrom').value = '';
+            document.getElementById('filterClosingTo').value = '';
+            document.getElementById('filterTenderType').value = '';
+            document.getElementById('searchInput').value = '';
+            currentTenders = [...allTenders];
+            renderTenders(currentTenders);
+            showToast('Filters reset! 🔄');
+        };
+
         async function loadTendersData() {
             try {
                 const response = await fetch('/api/tenders');
-                if (response.ok) {
-                    console.log('✅ Loaded from Flask API');
-                    return await response.json();
-                }
+                if (response.ok) return await response.json();
             } catch (e) {
                 console.log('Flask API unavailable, trying local JSON');
             }
-            
-            // Fallback paths
             const paths = ['../scrapers/tenders_all3.json', 'scrapers/tenders_all3.json'];
             for (let path of paths) {
                 try {
                     const response = await fetch(path);
                     if (response.ok) return await response.json();
-                } catch (e) {}
+                } catch (e) { }
             }
             throw new Error('No data source found');
         }
@@ -236,6 +487,7 @@
             return tenders;
         }
 
+        // 🔥 ENHANCED CARD - NO "View Original" + PRO GATING
         function createCard(tender) {
             const closing = new Date(tender.closing_date);
             const today = new Date();
@@ -243,54 +495,104 @@
             const isActive = daysLeft > 0;
             const isClosingSoon = daysLeft <= 7 && daysLeft > 0;
             const isFavorite = currentUser && userFavorites.has(tender.id);
+            const hasTenderId = !!tender.details?.basic_details?.['Tender ID'];
+            const tenderId = tender.details?.basic_details?.['Tender ID'] || 'N/A';
+            const tenderType = tender.details?.basic_details?.['Tender Type'] || 'N/A';
+            const tenderCategory = tender.details?.basic_details?.['Tender Category'] || 'N/A';
 
             return `
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover fade-in group" data-id="${tender.id}">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover fade-in group relative" 
+                     data-tender='${JSON.stringify(tender).replace(/'/g, "\\'")}' onclick="openTenderDetail('${tender.id}')">
                     <div class="p-8">
                         <div class="flex justify-between items-start mb-6">
                             ${isClosingSoon ? `<span class="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">⚡ ${daysLeft}d</span>` :
-                              isActive ? '<span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">Active</span>' :
-                              '<span class="bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-bold">Closed</span>'}
+                    isActive ? '<span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">Active</span>' :
+                        '<span class="bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-bold">Closed</span>'}
                             ${currentUser ? `
-                                <button onclick="toggleFavorite('${tender.id}')" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}" 
-                                        class="p-2 rounded-xl ${isFavorite ? 'bg-red-500 text-white shadow-lg' : 'bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500'} hover:scale-110 transition-all shadow-sm">
-                                    <i class="fas ${isFavorite ? 'fa-solid fa-heart' : 'fa-heart'} text-sm"></i>
+                                <button onclick="event.stopPropagation(); toggleFavorite('${tender.id}')" 
+                                        title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}" 
+                                        class="p-2 rounded-xl ${isFavorite ? 'bg-red-500 text-white shadow-lg' : 'bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500'} hover:scale-110 transition-all shadow-sm z-10">
+                                    <i class="fas ${isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'} text-sm"></i>
                                 </button>
                             ` : ''}
                         </div>
+                        
                         <h3 class="text-xl font-bold text-gray-800 mb-4 line-clamp-2 group-hover:text-indigo-600">${tender.details?.work_details?.Title || 'N/A'}</h3>
+                        
                         <div class="flex flex-wrap gap-2 mb-6">
                             <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">${tender.site}</span>
                             <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg text-sm max-w-[200px] truncate">${tender.organisation}</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">${tenderType}</span>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs">${tenderCategory}</span>
                         </div>
+                        
                         <div class="grid grid-cols-2 gap-3 mb-8 text-sm">
                             <div><i class="fas fa-calendar-alt text-indigo-500 mr-2"></i>Closing: ${tender.closing_date}</div>
                             <div><i class="fas fa-calendar-check text-green-500 mr-2"></i>Published: ${tender.published_date}</div>
-                            <div><i class="fas fa-hashtag text-purple-500 mr-2"></i>ID: ${tender.details?.basic_details?.['Tender ID'] || 'N/A'}</div>
+                            <div><i class="fas fa-hashtag text-purple-500 mr-2"></i>ID: ${isProUser ? tenderId : '🔒 PRO'}</div>
+                            <div><i class="fas fa-file-alt text-gray-500 mr-2"></i>Ref: ${tender.details?.basic_details?.['Tender Reference Number'] || 'N/A'}</div>
                         </div>
+                        
+                        <!-- 🔥 NEW BUTTON LAYOUT - NO "View Original" -->
                         <div class="flex gap-3 pt-6 border-t">
-                            <a href="${tender.title_link}" target="_blank" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 rounded-xl text-center shadow-lg hover:shadow-xl transition-all">
-                                <i class="fas fa-external-link-alt mr-2"></i>View Tender
-                            </a>
-                            <button onclick="copyTender('${tender.details?.basic_details?.['Tender ID'] || ''}')" class="p-3 bg-gray-100 hover:bg-gray-200 rounded-xl hover:scale-105 shadow-md transition-all">
-                                <i class="fas fa-copy"></i>
+                            <button onclick="event.stopPropagation(); ${isProUser ? `copyTender('${tenderId}')` : `showProModal('Copy Tender ID')`}" 
+                                    class="flex-1 p-3 ${isProUser ? 'bg-blue-100 hover:bg-blue-200 text-blue-700' : 'bg-orange-100 hover:bg-orange-200 text-orange-700 cursor-not-allowed'} rounded-xl hover:scale-105 shadow-md transition-all font-medium" 
+                                    ${!isProUser ? 'title="PRO required to copy Tender ID"' : ''}>
+                                <i class="fas fa-copy mr-2"></i>
+                                ${isProUser ? 'Copy ID' : '🔒 PRO Required'}
+                            </button>
+                            <button onclick="event.stopPropagation(); ${isProUser ? `openTenderDetail('${tender.id}')` : `showProModal('View Details')`}" 
+                                    class="flex-1 ${isProUser ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-300 hover:bg-gray-400 text-gray-700 cursor-not-allowed'} font-bold py-3 rounded-xl text-center shadow-lg hover:shadow-xl transition-all" 
+                                    ${!isProUser ? 'title="PRO required for full details"' : ''}>
+                                <i class="fas ${isProUser ? 'fa-eye' : 'fa-lock'} mr-2"></i>
+                                ${isProUser ? 'View More Details' : '🔒 Upgrade to PRO'}
                             </button>
                         </div>
                     </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                 </div>
             `;
         }
 
-        function filterTenders(search = '', site = '', org = '') {
-            return allTenders.filter(tender => {
-                const title = (tender.details?.work_details?.Title || '').toLowerCase();
-                const orgName = tender.organisation.toLowerCase();
-                const tenderId = (tender.details?.basic_details?.['Tender ID'] || '').toLowerCase();
-                return (!search || title.includes(search) || orgName.includes(search) || tenderId.includes(search)) &&
-                       (!site || tender.site === site) &&
-                       (!org || tender.organisation === org);
-            });
-        }
+        // 🔥 PRO GATING FUNCTIONS
+        window.showProModal = () => {
+            document.getElementById('proModal').classList.remove('hidden');
+        };
+
+        window.closeProModal = () => {
+            document.getElementById('proModal').classList.add('hidden');
+        };
+
+        // 🔥 TENDER DETAIL - PRO ONLY + NEW PAGE
+        window.openTenderDetail = (tenderId) => {
+
+            if (!isProUser) {
+                showProModal();
+                return;
+            }
+
+            const tender = allTenders.find(t => t.id === tenderId);
+
+            if (!tender) {
+                showToast("Tender not found", "error");
+                return;
+            }
+
+            localStorage.setItem("selectedTender", JSON.stringify(tender));
+
+            window.location.href = "/tender-detail.html";
+        };
+
+        window.copyTenderId = () => {
+            const tenderId = document.querySelector('#tenderDetailContent [data-tender-id]')?.textContent;
+            if (tenderId && tenderId !== 'N/A') {
+                navigator.clipboard.writeText(tenderId).then(() => showToast(`Copied: ${tenderId}`));
+            }
+        };
+
+        window.closeTenderDetail = () => {
+            document.getElementById('tenderDetailModal').classList.add('hidden');
+        };
 
         function updateStats(tenders) {
             const today = new Date();
@@ -310,7 +612,7 @@
         function renderTenders(tenders) {
             const grid = document.getElementById('tendersGrid');
             const noResults = document.getElementById('noResults');
-            
+
             if (tenders.length === 0) {
                 grid.innerHTML = '';
                 noResults.classList.remove('hidden');
@@ -321,64 +623,88 @@
             updateStats(tenders);
         }
 
-        // Firebase Auth
-        onAuthStateChanged(auth, (user) => {
+
+
+
+        // 🔥 Firebase Auth + Auto Login
+        onAuthStateChanged(auth, async (user) => {
+
             currentUser = user;
-            const authBtn = document.getElementById('authBtn');
+
+            const profileLink = document.getElementById('profileLink');
+            const profileIcon = document.getElementById('profileIcon');
+            const profileText = document.getElementById('profileText');
+            const sidebarUserName = document.getElementById('sidebarUserName');
+            const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+
             if (user) {
-                document.getElementById('authIcon').className = 'fas fa-user text-xl';
-                document.getElementById('authText').textContent = user.displayName?.split(' ')[0] || user.email?.split('@')[0];
-                authBtn.classList.add('bg-green-500/30', 'border', 'border-green-400');
-                loadUserFavorites(user.uid);
+
+                console.log("USER LOGGED:", user.uid);
+
+                profileIcon.className = 'fas fa-user text-xl';
+
+                profileText.textContent =
+                    user.displayName?.split(' ')[0] ||
+                    user.email?.split('@')[0] ||
+                    'Profile';
+
+                profileLink.classList.add(
+                    'bg-green-500/30',
+                    'border',
+                    'border-green-400'
+                );
+
+                sidebarUserName.textContent =
+                    user.displayName ||
+                    user.email?.split('@')[0] ||
+                    'User';
+
+                sidebarUserEmail.textContent = user.email;
+
+                // ✅ CHECK PRO STATUS WITH UID
+                await checkProStatus();
+
+                console.log("isProUser =", isProUser);
+
             } else {
-                document.getElementById('authIcon').className = 'fas fa-user-circle text-xl';
-                document.getElementById('authText').textContent = 'Sign In';
-                authBtn.classList.remove('bg-green-500/30', 'border', 'border-green-400');
+
+                console.log("NO USER");
+
+                profileIcon.className = 'fas fa-user-circle text-xl';
+
+                profileText.textContent = 'Profile';
+
+                profileLink.classList.remove(
+                    'bg-green-500/30',
+                    'border',
+                    'border-green-400'
+                );
+
+                sidebarUserName.textContent = 'Your Name';
+                sidebarUserEmail.textContent = 'user@example.com';
+
+                isProUser = false;
+
+                updateProUI();
             }
+
         });
 
-        function loadUserFavorites(uid) {
-            const favoritesRef = ref(db, `users/${uid}/favorites`);
-            onValue(favoritesRef, (snapshot) => {
-                userFavorites.clear();
-                const favorites = snapshot.val() || [];
-                favorites.forEach(id => userFavorites.add(id));
-                document.getElementById('favoritesCount').textContent = userFavorites.size;
-                renderTenders(currentTenders);
-            });
-        }
 
-        window.toggleFavorite = async (tenderId) => {
-            if (!currentUser) {
-                showToast('Please sign in to save favorites', 'info');
-                document.getElementById('authModal').classList.remove('hidden');
-                return;
-            }
-            const favoritesRef = ref(db, `users/${currentUser.uid}/favorites`);
-            if (userFavorites.has(tenderId)) {
-                const snapshot = await get(favoritesRef);
-                const favorites = snapshot.val() || [];
-                await set(favoritesRef, favorites.filter(id => id !== tenderId));
-                showToast('Removed from favorites');
-            } else {
-                await push(favoritesRef, tenderId);
-                showToast('Added to favorites ❤️');
-            }
-        };
 
-        // Event Listeners
+        // 🔥 Page Load + Auto Login
         document.addEventListener('DOMContentLoaded', async () => {
+            // Auto anonymous login
+            try {
+                await signInAnonymously(auth);
+            } catch (e) {
+                console.log('Auto login failed');
+            }
+
             try {
                 const data = await loadTendersData();
                 allTenders = flattenTenders(data);
                 currentTenders = [...allTenders];
-                
-                const sites = [...new Set(allTenders.map(t => t.site))];
-                const orgs = [...new Set(allTenders.map(t => t.organisation))];
-                
-                document.getElementById('siteFilter').innerHTML += sites.map(s => `<option value="${s}">${s}</option>`).join('');
-                document.getElementById('orgFilter').innerHTML += orgs.slice(0, 100).map(o => `<option value="${o}">${o}</option>`).join('');
-                
                 renderTenders(currentTenders);
                 document.getElementById('loading').style.display = 'none';
             } catch (error) {
@@ -391,39 +717,10 @@
                 `;
             }
 
-            // Your existing event listeners
             document.getElementById('searchInput').addEventListener('input', debounce((e) => {
-                const search = e.target.value.toLowerCase().trim();
-                currentTenders = filterTenders(search, document.getElementById('siteFilter').value, document.getElementById('orgFilter').value);
+                currentTenders = advancedFilterTenders(allTenders);
                 renderTenders(currentTenders);
             }, 300));
-
-            document.getElementById('filterBtn').addEventListener('click', () => {
-                const search = document.getElementById('searchInput').value.toLowerCase().trim();
-                const site = document.getElementById('siteFilter').value;
-                const org = document.getElementById('orgFilter').value;
-                currentTenders = filterTenders(search, site, org);
-                renderTenders(currentTenders);
-            });
-
-            document.getElementById('clearBtn').addEventListener('click', () => {
-                document.getElementById('searchInput').value = '';
-                document.getElementById('siteFilter').value = '';
-                document.getElementById('orgFilter').value = '';
-                currentTenders = [...allTenders];
-                renderTenders(currentTenders);
-            });
-
-            // Auth modal handlers
-            document.getElementById('authBtn').addEventListener('click', (e) => {
-                if (currentUser) {
-                    document.getElementById('userDropdown').classList.toggle('hidden');
-                } else {
-                    document.getElementById('authModal').classList.remove('hidden');
-                }
-            });
-
-            // Add all other auth handlers here...
         });
 
         function debounce(func, wait) {
@@ -439,9 +736,17 @@
         }
 
         window.copyTender = (id) => {
-            if (id) {
+            if (id && id !== 'N/A') {
                 navigator.clipboard.writeText(id).then(() => showToast(`Copied: ${id}`));
             }
+        };
+
+        window.toggleFavorite = async (tenderId) => {
+            if (!currentUser) {
+                showToast('Please login via Profile to save favorites', 'info');
+                return;
+            }
+            showToast('Favorites feature coming soon! ❤️');
         };
 
         function showToast(message, type = 'info') {
@@ -454,4 +759,5 @@
         }
     </script>
 </body>
+
 </html>

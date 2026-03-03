@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Subscription - TenderHub India</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Subscription Page Styles */
+        body.subscription-page {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        .subscription-container { max-width: 500px; margin: 0 auto; padding: 40px 20px; }
+        .subscription-header { text-align: center; color: white; margin-bottom: 40px; }
+        .subscription-header h1 { font-size: 3rem; font-weight: 900; margin-bottom: 16px; }
+        .subscription-tagline { font-size: 1.25rem; opacity: 0.95; }
+        .subscription-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(0);
+            animation: slideUp 0.6s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .price-display { text-align: center; margin: 32px 0; }
+        .price-amount { font-size: 4rem; font-weight: 900; background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .price-period { font-size: 1.25rem; color: #64748b; }
+        .features-list { list-style: none; padding: 0; margin: 32px 0; }
+        .feature-item { display: flex; align-items: center; padding: 16px 0; font-size: 1.1rem; border-bottom: 1px solid #f1f5f9; }
+        .feature-item:last-child { border-bottom: none; }
+        .feature-icon { color: #10b981; width: 24px; margin-right: 16px; font-size: 1.2rem; }
+
+        .cta-button {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.4); }
+        .cta-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .cta-button:disabled:hover { box-shadow: none; }
+
+        .guarantee-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            font-weight: 600;
+        }
+        .toast {
+            position: fixed; top: 20px; right: 20px; z-index: 10000;
+            min-width: 300px; padding: 16px 20px; border-radius: 12px;
+            color: white; font-weight: 600; transform: translateX(400px);
+            transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
+        .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .toast.info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+
+        .user-info { background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .status-free { background: #fee2e2; color: #dc2626; }
+        .status-pro { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+
+        .pricing-toggle-btn {
+            background: none; border: none; transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .pricing-toggle-btn.active {
+            background: white; color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+        }
+        .pricing-toggle-btn:hover:not(.active) { background: rgba(255,255,255,0.1); }
+
+        @media (max-width: 768px) {
+            .subscription-header h1 { font-size: 2.25rem; }
+            .subscription-card { margin: 20px; padding: 32px 24px; }
+        }
+    </style>
+</head>
+<body class="subscription-page">
+    <div class="subscription-container">
+        <!-- Toast Container -->
+        <div id="toastContainer"></div>
+
+        <!-- User Status -->
+        <div class="user-info" id="userInfo" style="display: none;">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-user-circle text-2xl text-gray-600"></i>
+                    <div>
+                        <div id="userName" class="font-semibold text-lg"></div>
+                        <div id="userEmail" class="text-sm text-gray-500"></div>
+                    </div>
+                </div>
+                <span id="subscriptionStatus" class="status-badge status-free">Free Plan</span>
+            </div>
+            <div id="subscriptionExpiry" class="text-sm text-gray-600" style="display: none;"></div>
+        </div>
+
+        <header class="subscription-header">
+            <h1><i class="fas fa-crown"></i> Go Pro</h1>
+            <p class="subscription-tagline">Unlock unlimited tenders & win more contracts</p>
+        </header>
+
+        <div class="subscription-card">
+            <!-- Pricing Toggle -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-gray-100 rounded-full p-1 flex">
+                    <button id="monthlyBtn" class="pricing-toggle-btn active flex-1 py-3 px-6 rounded-full font-semibold text-sm transition-all">
+                        Monthly
+                    </button>
+                                        <button id="yearlyBtn" class="pricing-toggle-btn flex-1 py-3 px-6 rounded-full font-semibold text-sm transition-all">
+                        Yearly <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full ml-1">(25% OFF)</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="price-display" id="priceDisplay">
+                <div class="price-amount" id="priceAmount">₹99</div>
+                <span class="price-period" id="pricePeriod">per month</span>
+            </div>
+
+            <ul class="features-list">
+                <li class="feature-item"><i class="fas fa-check-circle feature-icon"></i>✅ Unlimited tender access from 8+ gov sites</li>
+                <li class="feature-item"><i class="fas fa-check-circle feature-icon"></i>✅ Full Tender IDs & complete details</li>
+                <li class="feature-item"><i class="fas fa-check-circle feature-icon"></i>✅ AI-powered smart filters & search</li>
+                <li class="feature-item"><i class="fas fa-check-circle feature-icon"></i>✅ Real-time closing alerts</li>
+                <li class="feature-item"><i class="fas fa-check-circle feature-icon"></i>✅ Unlimited favorites & exports</li>
+                <li class="feature-item"><i class="fas fa-check-circle feature-icon"></i>✅ Priority 24/7 support</li>
+            </ul>
+
+            <button class="cta-button" id="subscribeBtn">
+                <span id="btnText">
+                    <i class="fas fa-bolt mr-2"></i>Activate Pro Plan - 30 Days Free!
+                </span>
+                <div id="loadingSpinner" class="hidden absolute inset-0 flex items-center justify-center bg-green-600/20 backdrop-blur-sm">
+                    <i class="fas fa-spinner fa-spin text-xl"></i>
+                </div>
+            </button>
+
+            <div class="guarantee-badge">
+                <i class="fas fa-shield-alt"></i>
+                30-day money back guarantee • Cancel anytime • Instant access
+            </div>
+
+            <div style="text-align: center; margin-top: 32px; color: #64748b; font-size: 0.875rem;">
+                <p>✅ No contracts • Secure payments • Works on all devices</p>
+                <a href="/free-tenders" class="block mt-4 font-semibold hover:text-indigo-600 transition-colors">
+                    ← Back to Free Tenders
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnrDnOHIi3oNE9bGBDc2IGt64fZiJgpbQ",
+            authDomain: "blink-c30fa.firebaseapp.com",
+            projectId: "blink-c30fa",
+            storageBucket: "blink-c30fa.firebasestorage.app",
+            messagingSenderId: "37798724346",
+            appId: "1:37798724346:web:4374e9cfad34dbd69eff43"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        let currentUser = null;
+
+        // DOM Elements
+        const monthlyBtn = document.getElementById('monthlyBtn');
+        const yearlyBtn = document.getElementById('yearlyBtn');
+        const priceAmount = document.getElementById('priceAmount');
+        const pricePeriod = document.getElementById('pricePeriod');
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        const btnText = document.getElementById('btnText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const subscriptionStatus = document.getElementById('subscriptionStatus');
+        const subscriptionExpiry = document.getElementById('subscriptionExpiry');
+
+        let isAnnual = false;
+        let isProUser = false;
+
+        // 🔥 Check subscription status with Firebase token
+        async function checkSubscriptionStatus(uid) {
+            try {
+                if (!currentUser) return;
+                const idToken = await currentUser.getIdToken();
+
+                const response = await fetch(`/api/subscription/status?userId=${uid}`, {
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`
+                    }
+                });
+                const data = await response.json();
+
+                isProUser = data.isPro;
+                if (isProUser) {
+                    subscriptionStatus.textContent = 'Pro Plan';
+                    subscriptionStatus.className = 'status-badge status-pro';
+                    subscriptionExpiry.textContent = `Active until ${new Date(data.expiryDate).toLocaleDateString('en-IN')}`;
+                    subscriptionExpiry.style.display = 'block';
+                    subscribeBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i>✅ Pro Plan Active!';
+                    subscribeBtn.disabled = true;
+                    subscribeBtn.style.background = 'linear-gradient(135deg, #6b7280, #4b5563)';
+                } else {
+                    subscriptionStatus.textContent = 'Free Plan';
+                    subscriptionStatus.className = 'status-badge status-free';
+                    subscriptionExpiry.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Subscription check failed:', error);
+            }
+        }
+
+        // 🔥 Activate Pro Subscription with userId
+        async function activateProSubscription() {
+            if (!currentUser) {
+                showToast('Please login first via Profile page!', 'error');
+                return;
+            }
+
+            if (isProUser) {
+                showToast('You already have Pro plan active!', 'success');
+                return;
+            }
+
+            subscribeBtn.disabled = true;
+            loadingSpinner.classList.remove('hidden');
+            btnText.style.opacity = '0';
+
+            try {
+                const idToken = await currentUser.getIdToken(true);
+
+                const response = await fetch('/api/subscription/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    },
+                    body: JSON.stringify({
+                        userId: currentUser.uid,          // ✅ sent to backend
+                        plan: isAnnual ? 'pro_yearly' : 'pro_monthly',
+                        amount: isAnnual ? 888 : 99
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    subscriptionStatus.textContent = 'Pro Plan';
+                    subscriptionStatus.className = 'status-badge status-pro';
+                    subscriptionExpiry.textContent = `Active until ${new Date(data.expiryDate).toLocaleDateString('en-IN')}`;
+                    subscriptionExpiry.style.display = 'block';
+
+                    subscribeBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i>✅ Pro Activated! Redirecting...';
+                    subscribeBtn.disabled = true;
+                    subscribeBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+
+                    showToast(`🎉 Pro Plan activated! Valid until ${new Date(data.expiryDate).toLocaleDateString('en-IN')}`, 'success');
+
+                    localStorage.setItem('proActivated', 'true');
+                    setTimeout(() => {
+                        window.location.href = '/tenders';
+                    }, 2000);
+                } else {
+                    throw new Error(data.error || 'Subscription activation failed');
+                }
+            } catch (error) {
+                console.error('Subscription error:', error);
+                showToast(`❌ ${error.message || 'Subscription failed! Please try again.'}`, 'error');
+            } finally {
+                subscribeBtn.disabled = false;
+                loadingSpinner.classList.add('hidden');
+                btnText.style.opacity = '1';
+            }
+        }
+
+        // 🔥 Pricing Toggle
+        function updatePricing(isAnnualPlan) {
+            isAnnual = isAnnualPlan;
+            if (isAnnual) {
+                priceAmount.textContent = '₹74';
+                pricePeriod.innerHTML = 'per month <span class="text-sm opacity-70 ml-1">(₹888/year - Save 25%)</span>';
+            } else {
+                priceAmount.textContent = '₹99';
+                pricePeriod.textContent = 'per month';
+            }
+        }
+
+        monthlyBtn.addEventListener('click', () => {
+            monthlyBtn.classList.add('active');
+            yearlyBtn.classList.remove('active');
+            updatePricing(false);
+        });
+
+        yearlyBtn.addEventListener('click', () => {
+            yearlyBtn.classList.add('active');
+            monthlyBtn.classList.remove('active');
+            updatePricing(true);
+        });
+
+        // 🔥 Subscribe Button
+        subscribeBtn.addEventListener('click', activateProSubscription);
+
+        // 🔥 Auth State Listener
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            if (user) {
+                userName.textContent = user.displayName || user.email.split('@')[0];
+                userEmail.textContent = user.email;
+                userInfo.style.display = 'block';
+
+                await checkSubscriptionStatus(user.uid);
+            } else {
+                userInfo.style.display = 'none';
+                subscriptionStatus.textContent = 'Not Logged In';
+                subscriptionStatus.className = 'status-badge status-free';
+                showToast('Please login via Profile to activate Pro plan!', 'info');
+            }
+        });
+
+        // 🔥 Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.getElementById('toastContainer').appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(400px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for pending tender from free page
+            const pendingTenderId = localStorage.getItem('pendingTenderId');
+            if (pendingTenderId) {
+                showToast(`Opening tender ${pendingTenderId.slice(0, 8)}... Upgrade to view full details!`, 'info');
+                localStorage.removeItem('pendingTenderId');
+            }
+        });
+    </script>
+</body>
+</html>

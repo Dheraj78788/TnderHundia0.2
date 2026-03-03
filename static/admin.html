@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TenderHub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            color: white;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(4px);
+        }
+        .nav-active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .logout-btn {
+            margin-top: auto;
+            background: rgba(239,68,68,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .logout-btn:hover {
+            background: rgba(239,68,68,0.5);
+            transform: translateX(4px);
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+        .section {
+            flex: 1;
+            display: none;
+            overflow: auto;
+            padding: 24px;
+        }
+        .section.active {
+            display: block;
+        }
+        .loading {
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg) }
+        }
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        .search-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .chart-container {
+            height: 400px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <i class="fas fa-tachometer-alt"></i>
+                Admin Panel
+            </h2>
+            <div class="nav-link nav-active" onclick="showSection('dashboard',this)">
+                <i class="fas fa-home mr-3"></i>Dashboard
+            </div>
+            <div class="nav-link" onclick="showSection('users',this);loadUsers()">
+                <i class="fas fa-users mr-3"></i>Users
+            </div>
+            <div class="nav-link" onclick="showSection('portals',this);loadPortals()">
+                <i class="fas fa-globe mr-3"></i>Portals
+            </div>
+            <div class="nav-link" onclick="showSection('organizations',this);loadOrganizations()">
+                <i class="fas fa-building mr-3"></i>Organizations
+            </div>
+            <div class="nav-link" onclick="showSection('tenders',this);loadTenders()">
+                <i class="fas fa-file-contract mr-3"></i>Tenders
+            </div>
+            
+            <!-- LOGOUT BUTTON - BOTTOM OF SIDEBAR -->
+            <div class="nav-link logout-btn mt-12" onclick="logout()">
+                <i class="fas fa-sign-out-alt mr-3 text-red-300"></i>
+                <span class="text-red-200 font-semibold">Logout</span>
+            </div>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main">
+            <!-- DASHBOARD -->
+            <div id="dashboard-section" class="section active">
+                <h1 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                    <i class="fas fa-chart-line text-gray-500"></i>
+                    Dashboard Overview
+                </h1>
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card text-center">
+                        <div class="text-3xl font-bold text-indigo-600" id="total-portals">0</div>
+                        <div class="text-sm text-gray-500 mt-1">Portals</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-3xl font-bold text-purple-600" id="total-orgs">0</div>
+                        <div class="text-sm text-gray-500 mt-1">Organizations</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-3xl font-bold text-blue-600" id="total-users">0</div>
+                        <div class="text-sm text-gray-500 mt-1">Users</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-3xl font-bold text-green-600" id="tenders-count">0</div>
+                        <div class="text-sm text-gray-500 mt-1">Tenders</div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="stat-card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <i class="fas fa-chart-pie text-indigo-500"></i>
+                            Tenders by Portal
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <i class="fas fa-chart-line text-blue-500"></i>
+                            Tenders Trend
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS -->
+            <div id="users-section" class="section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Users Management</h2>
+                    <div class="search-box p-2 flex-1 max-w-md">
+                        <input type="text" id="users-search" placeholder="Search users..." class="w-full outline-none px-4 py-2">
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Name</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Email</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Plan</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-body">
+                            <tr>
+                                <td colspan="4" class="py-12">
+                                    <div class="loading"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PORTALS -->
+            <div id="portals-section" class="section">
+                <h2 class="text-2xl font-bold mb-6">Portals</h2>
+                <div id="portals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </div>
+
+            <!-- ALL ORGANIZATIONS -->
+            <div id="organizations-section" class="section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">All Organizations <span class="text-sm text-gray-500" id="total-orgs-display">0</span></h2>
+                    <div class="search-box p-2 flex-1 max-w-md">
+                        <input type="text" id="orgs-search" placeholder="Search organizations..." class="w-full outline-none px-4 py-2">
+                    </div>
+                </div>
+                <div id="orgs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-[calc(100vh-200px)] overflow-auto"></div>
+            </div>
+
+            <!-- TENDERS - SIMPLIFIED (ONLY 3 COLUMNS) -->
+            <div id="tenders-section" class="section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">All Tenders <span class="text-sm text-gray-500" id="total-tenders-display">0</span></h2>
+                    <div class="search-box p-2 flex-1 max-w-md">
+                        <input type="text" id="tenders-search" placeholder="Search tenders..." class="w-full outline-none px-4 py-2">
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Portal</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Organisation</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Tender ID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tenders-body">
+                            <tr>
+                                <td colspan="3" class="py-12">
+                                    <div class="loading"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allUsers = [], allTenders = [], allPortals = [], allOrgs = [];
+        let pieChart, lineChart;
+
+        function showSection(name, el) {
+            document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+            document.getElementById(name + "-section").classList.add("active");
+            document.querySelectorAll(".nav-link").forEach(n => n.classList.remove("nav-active"));
+            if (el) el.classList.add("nav-active");
+        }
+
+        // 🚪 LOGOUT FUNCTION - REDIRECT TO index.html
+        function logout() {
+            // Clear any local/session storage
+            localStorage.removeItem('adminLoggedIn');
+            sessionStorage.clear();
+            
+            // Show confirmation (optional)
+            if (confirm('Are you sure you want to logout? You will be redirected to the homepage.')) {
+                // Redirect to index.html (public homepage)
+                window.location.href = 'index.html';
+            }
+        }
+
+        function extractTitle(titleAndRef) {
+            if (!titleAndRef) return 'N/A';
+            const match = titleAndRef.match(/^(.*?)(?=\[|\s*$)/);
+            return match ? match[1].trim() : titleAndRef;
+        }
+
+        async function fetchJson() {
+            const paths = [
+                "scrapers/tenders_all3.json",
+                "/scrapers/tenders_all3.json",
+                "tenders_all3.json",
+                "./scrapers/tenders_all3.json"
+            ];
+            for (let p of paths) {
+                try {
+                    let r = await fetch(p);
+                    if (r.ok) {
+                        let d = await r.json();
+                        if (Array.isArray(d)) return d;
+                    }
+                } catch {}
+            }
+            return [];
+        }
+
+        function createPieChart(portalTenderCounts) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            if (pieChart) pieChart.destroy();
+            
+            const sortedData = Object.entries(portalTenderCounts)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 8);
+            
+            const labels = sortedData.map(([name]) => name);
+            const data = sortedData.map(([,count]) => count);
+            
+            pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            '#6366f1', '#8b5cf6', '#ec4899', '#f59e0b',
+                            '#10b981', '#3b82f6', '#ef4444', '#f97316'
+                        ],
+                        borderWidth: 4,
+                        borderColor: '#ffffff',
+                        hoverOffset: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { padding: 25, usePointStyle: true, font: { size: 13 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return `${context.label}: ${context.parsed} tenders (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createLineChart(tendersData) {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            if (lineChart) lineChart.destroy();
+            
+            lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: tendersData.labels,
+                    datasets: [{
+                        label: 'Tenders',
+                        data: tendersData.data,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        borderWidth: 4,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#6366f1',
+                        pointBorderWidth: 3,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { color: 'rgba(0,0,0,0.05)' } }
+                    }
+                }
+            });
+        }
+
+        async function loadDashboard() {
+            document.getElementById("total-portals").innerText = allPortals.length;
+            document.getElementById("total-orgs").innerText = allOrgs.length;
+            document.getElementById("total-users").innerText = allUsers.length;
+            document.getElementById("tenders-count").innerText = allTenders.length;
+            document.getElementById("total-tenders-display").textContent = `(${allTenders.length})`;
+            document.getElementById("total-orgs-display").textContent = `(${allOrgs.length})`;
+        }
+
+        async function loadPortals() {
+            let grid = document.getElementById("portals-grid");
+            grid.innerHTML = '<div class="loading col-span-full"></div>';
+            
+            let data = await fetchJson();
+            allPortals = [...new Set(data.map(x => x.site || x.site_name))];
+            
+            grid.innerHTML = "";
+            allPortals.forEach(p => {
+                grid.innerHTML += `
+                    <div class="stat-card p-6 text-center hover:bg-indigo-50 border-l-4 border-indigo-500">
+                        <div class="text-lg font-bold text-gray-900">${p}</div>
+                        <div class="text-sm text-gray-500 mt-1">Portal</div>
+                    </div>
+                `;
+            });
+        }
+
+        async function loadOrganizations() {
+            let grid = document.getElementById("orgs-grid");
+            grid.innerHTML = '<div class="loading col-span-full h-32 flex items-center justify-center"></div>';
+            
+            let data = await fetchJson();
+            let orgSet = new Set();
+            data.forEach(site => {
+                site.data?.forEach(org => {
+                    const orgName = org.name || org.organisation;
+                    if (orgName) orgSet.add(orgName);
+                });
+            });
+            allOrgs = [...orgSet].sort();
+            
+            document.getElementById("total-orgs-display").textContent = `(${allOrgs.length})`;
+            
+            grid.innerHTML = "";
+            allOrgs.forEach(o => {
+                grid.innerHTML += `
+                    <div class="stat-card p-6 hover:bg-purple-50 border-l-4 border-purple-500 cursor-pointer group">
+                        <div class="text-lg font-bold text-gray-900 group-hover:text-purple-600 truncate" title="${o}">${o}</div>
+                        <div class="text-sm text-gray-500 mt-1">Organization</div>
+                    </div>
+                `;
+            });
+        }
+
+        async function loadTenders() {
+            let body = document.getElementById("tenders-body");
+            body.innerHTML = "<tr><td colspan=3 class='py-12'><div class='loading mx-auto'></div></td></tr>";
+            
+            let data = await fetchJson();
+            let tenders = [];
+            
+            for (let site of data) {
+                for (let org of site.data || []) {
+                    for (let t of org.tenders || []) {
+                        let basic = t.details?.basic_details || {};
+                        tenders.push({
+                            portal: site.site || site.site_name || 'Unknown',
+                            org: org.name || org.organisation || 'Unknown',
+                            id: basic["Tender ID"] || basic["Tender ID "] || 'N/A'
+                        });
+                    }
+                }
+            }
+            allTenders = tenders;
+            
+            // SIMPLIFIED 3-COLUMN TABLE
+            let html = allTenders.map((t, index) => `
+                <tr class="hover:bg-gray-50 border-b ${index % 2 === 0 ? 'bg-gray-50' : ''}">
+                    <td class="px-6 py-3 font-medium text-gray-900">${t.portal}</td>
+                    <td class="px-6 py-3 text-gray-700">${t.org}</td>
+                    <td class="px-6 py-3">
+                        <span class="font-mono bg-indigo-50 px-3 py-1 rounded-lg text-sm">${t.id}</span>
+                    </td>
+                </tr>
+            `).join('');
+            
+            body.innerHTML = html || '<tr><td colspan="3" class="py-12 text-center text-gray-500">No tenders found</td></tr>';
+            document.getElementById("total-tenders-display").textContent = `(${allTenders.length})`;
+        }
+
+        async function loadUsers() {
+            let body = document.getElementById("users-body");
+            body.innerHTML = "<tr><td colspan=4 class='py-12'><div class='loading mx-auto'></div></td></tr>";
+            
+            try {
+                let r = await fetch("/api/admin/users");
+                let apiUsers = await r.json();
+                allUsers = apiUsers.map(u => ({
+                    name: u.displayName || u.name || 'N/A',
+                    email: u.email || u.client_email || 'N/A',
+                    plan: u.plan || u.subscription || 'Free',
+                    status: u.status || 'Active'
+                }));
+            } catch {
+                allUsers = [
+                    { name: "Dharmendra", email: "firebase-adminsdk-1kvk5@blink-c30fa.iam.gserviceaccount.com", plan: "Pro", status: "Active" },
+                    { name: "John Doe", email: "john@example.com", plan: "Free", status: "Active" }
+                ];
+            }
+            
+            let html = allUsers.map(u => `
+                <tr class="hover:bg-gray-50 border-b">
+                    <td class="px-6 py-4 font-medium text-gray-900">${u.name}</td>
+                    <td class="px-6 py-4 text-gray-700">${u.email}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-sm font-medium ${
+                            u.plan === 'Pro' ? 'bg-green-100 text-green-800' :
+                            u.plan === 'Premium' ? 'bg-purple-100 text-purple-800' :
+                            'bg-gray-100 text-gray-800'
+                        }">${u.plan}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-sm font-medium ${
+                            u.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }">${u.status}</span>
+                    </td>
+                </tr>
+            `).join('');
+            body.innerHTML = html;
+        }
+
+        // Search functionality
+        document.getElementById('users-search').addEventListener('input', function(e) {
+            let term = e.target.value.toLowerCase();
+            let filtered = allUsers.filter(u => 
+                u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)
+            );
+            updateUsersTable(filtered);
+        });
+
+        document.getElementById('tenders-search').addEventListener('input', function(e) {
+            let term = e.target.value.toLowerCase();
+            let filtered = allTenders.filter(t => 
+                t.portal.toLowerCase().includes(term) || 
+                t.org.toLowerCase().includes(term) || 
+                t.id.toLowerCase().includes(term)
+            );
+            updateTendersTable(filtered);
+        });
+
+        document.getElementById('orgs-search').addEventListener('input', function(e) {
+            let term = e.target.value.toLowerCase();
+            let filtered = allOrgs.filter(org => org.toLowerCase().includes(term));
+            updateOrgsGrid(filtered);
+        });
+
+        function updateUsersTable(users) {
+            let html = users.map(u => `
+                <tr class="hover:bg-gray-50 border-b">
+                    <td class="px-6 py-4 font-medium text-gray-900">${u.name}</td>
+                    <td class="px-6 py-4 text-gray-700">${u.email}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-sm font-medium ${
+                            u.plan === 'Pro' ? 'bg-green-100 text-green-800' :
+                            u.plan === 'Premium' ? 'bg-purple-100 text-purple-800' :
+                            'bg-gray-100 text-gray-800'
+                        }">${u.plan}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-sm font-medium ${
+                            u.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }">${u.status}</span>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById("users-body").innerHTML = html || '<tr><td colspan="4" class="py-12 text-center text-gray-500">No matching users</td></tr>';
+        }
+
+        function updateTendersTable(tenders) {
+            let html = tenders.map((t, index) => `
+                <tr class="hover:bg-gray-50 border-b ${index % 2 === 0 ? 'bg-gray-50' : ''}">
+                    <td class="px-6 py-3 font-medium text-gray-900">${t.portal}</td>
+                    <td class="px-6 py-3 text-gray-700">${t.org}</td>
+                    <td class="px-6 py-3">
+                        <span class="font-mono bg-indigo-50 px-3 py-1 rounded-lg text-sm">${t.id}</span>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById("tenders-body").innerHTML = html || '<tr><td colspan="3" class="py-12 text-center text-gray-500">No matching tenders</td></tr>';
+        }
+
+        function updateOrgsGrid(orgs) {
+            let grid = document.getElementById("orgs-grid");
+            grid.innerHTML = "";
+            orgs.forEach(o => {
+                grid.innerHTML += `
+                    <div class="stat-card p-6 hover:bg-purple-50 border-l-4 border-purple-500 cursor-pointer group">
+                        <div class="text-lg font-bold text-gray-900 group-hover:text-purple-600 truncate" title="${o}">${o}</div>
+                        <div class="text-sm text-gray-500 mt-1">Organization</div>
+                    </div>
+                `;
+            });
+        }
+
+        // Initialize
+        window.addEventListener('load', async () => {
+            try {
+                let data = await fetchJson();
+                
+                const portalTenderCounts = {};
+                data.forEach(site => {
+                    const portal = site.site || site.site_name || 'Unknown';
+                    if (!portalTenderCounts[portal]) portalTenderCounts[portal] = 0;
+                    const tenderCount = (site.data || []).reduce((total, org) => {
+                        return total + (org.tenders || []).length;
+                    }, 0);
+                    portalTenderCounts[portal] += tenderCount;
+                });
+                
+                await Promise.all([loadPortals(), loadOrganizations(), loadTenders(), loadUsers()]);
+                await loadDashboard();
+
+                createPieChart(portalTenderCounts);
+                const trendData = {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    data: [120, 190, 300, 500, 200, allTenders.length || 450]
+                };
+                createLineChart(trendData);
+
+            } catch (e) {
+                console.error('Load error:', e);
+            }
+        });
+    </script>
+</body>
+</html>

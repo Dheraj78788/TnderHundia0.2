@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tender Details - TenderHub India</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.6s ease-out; }
+        .status-active { background: linear-gradient(90deg, #10b981, #059669); }
+        .status-closing { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .status-closed { background: linear-gradient(90deg, #6b7280, #4b5563); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
+    <!-- Navbar -->
+    <nav class="gradient-bg text-white shadow-2xl sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/tenders" class="flex items-center space-x-3 hover:scale-105 transition-all">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                    <span class="text-xl font-bold">Back to Tenders</span>
+                </a>
+                <a href="/" class="flex items-center space-x-2 px-6 py-3 bg-white/20 backdrop-blur-sm rounded-2xl hover:bg-white/30 transition-all font-medium">
+                    <i class="fas fa-home"></i>
+                    <span>TenderHub India</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12 max-w-6xl">
+        <div id="loading" class="text-center py-20">
+            <i class="fas fa-spinner fa-spin text-5xl text-indigo-600 mb-6"></i>
+            <p class="text-xl text-gray-600">Loading tender details...</p>
+        </div>
+
+        <div id="tenderDetail" class="hidden">
+            <!-- Hero Section -->
+            <div class="glass-card rounded-3xl p-8 mb-8 slide-in">
+                <div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+                    <div class="flex-1">
+                        <h1 id="tenderTitle" class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 line-clamp-2"></h1>
+                        <div class="flex flex-wrap gap-3 mb-6">
+                            <span id="tenderOrg" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-xl font-semibold"></span>
+                            <span id="tenderID" class="bg-blue-100 text-blue-800 px-4 py-2 rounded-xl font-medium">ID: Loading...</span>
+                            <span id="tenderRef" class="bg-green-100 text-green-800 px-4 py-2 rounded-xl font-medium">Ref: Loading...</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div id="statusBadge" class="px-6 py-3 rounded-2xl font-bold text-white text-lg shadow-xl">Loading...</div>
+                        <a id="viewOriginal" href="#" target="_blank" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all flex items-center space-x-2">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>View Original Tender</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-indigo-600 mb-1" id="daysLeft">-</div>
+                    <div class="text-sm text-gray-600 font-medium">Days Left</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-green-600 mb-1" id="publishedDate">-</div>
+                    <div class="text-sm text-gray-600 font-medium">Published</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-orange-600 mb-1" id="closingDate">-</div>
+                    <div class="text-sm text-gray-600 font-medium">Closing Date</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-purple-600 mb-1" id="bidValidity">-</div>
+                    <div class="text-sm text-gray-600 font-medium">Bid Validity</div>
+                </div>
+            </div>
+
+            <!-- Main Details Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <!-- Basic Details -->
+                <div class="glass-card p-8 rounded-3xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-info-circle text-indigo-500 mr-3"></i>
+                        Basic Details
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Tender Type:</span></div>
+                            <div id="tenderType" class="font-medium text-indigo-600"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Tender Category:</span></div>
+                            <div id="tenderCategory" class="font-medium text-purple-600"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Form of Contract:</span></div>
+                            <div id="formOfContract"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">No. of Covers:</span></div>
+                            <div id="noOfCovers"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Payment Mode:</span></div>
+                            <div id="paymentMode"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Details -->
+                <div class="glass-card p-8 rounded-3xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-briefcase text-green-500 mr-3"></i>
+                        Work Details
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Product Category:</span></div>
+                            <div id="productCategory" class="font-medium"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Contract Type:</span></div>
+                            <div id="contractType"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Location:</span></div>
+                            <div id="location"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Pincode:</span></div>
+                            <div id="pincode"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Period of Work:</span></div>
+                            <div id="periodOfWork"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Critical Dates -->
+            <div class="glass-card p-8 rounded-3xl mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-calendar-alt text-orange-500 mr-3"></i>
+                    Critical Dates
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <div class="grid grid-cols-2 gap-4 mb-2">
+                            <div><span class="font-semibold text-gray-600">Published:</span></div>
+                            <div id="pubDate"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-2">
+                            <div><span class="font-semibold text-gray-600">Bid Opening:</span></div>
+                            <div id="bidOpening"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="grid grid-cols-2 gap-4 mb-2">
+                            <div><span class="font-semibold text-gray-600">Doc Download Start:</span></div>
+                            <div id="docStart"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><span class="font-semibold text-gray-600">Doc Download End:</span></div>
+                            <div id="docEnd"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Covers Required -->
+            <div id="coversSection" class="glass-card p-8 rounded-3xl">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-file-archive text-blue-500 mr-3"></i>
+                    Documents Required
+                </h2>
+                <div id="coversList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="glass-card p-8 rounded-3xl flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a id="originalLinkBtn" href="#" target="_blank" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all flex items-center space-x-3 text-lg">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Open Original Tender</span>
+                </a>
+                <button onclick="copyTenderID()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all flex items-center space-x-3 text-lg">
+                    <i class="fas fa-copy"></i>
+                    <span>Copy Tender ID</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tenderData = JSON.parse(localStorage.getItem('selectedTender') || '{}');
+            
+            if (!tenderData.id) {
+                document.getElementById('loading').innerHTML = `
+                    <div class="text-center py-20">
+                        <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-6"></i>
+                        <h3 class="text-3xl font-bold text-red-800 mb-4">No Tender Data Found</h3>
+                        <p class="text-xl text-gray-600 mb-6">Please select a tender from the main page</p>
+                        <a href="/tenders" class="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all">← Go to Tenders</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Populate all fields
+            populateTenderDetails(tenderData);
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('tenderDetail').classList.remove('hidden');
+        });
+
+        function populateTenderDetails(tender) {
+            const details = tender.details || {};
+            const basic = details.basic_details || {};
+            const work = details.work_details || {};
+            const dates = details.critical_dates || {};
+            const covers = details.covers || [];
+
+            // Hero section
+            document.getElementById('tenderTitle').textContent = work.Title || 'N/A';
+            document.getElementById('tenderOrg').textContent = tender.organisation || 'N/A';
+            document.getElementById('tenderID').innerHTML = `ID: ${basic['Tender ID'] || 'N/A'}`;
+            document.getElementById('tenderRef').innerHTML = `Ref: ${basic['Tender Reference Number'] || 'N/A'}`;
+            document.getElementById('viewOriginal').href = tender.title_link || '#';
+            document.getElementById('originalLinkBtn').href = tender.title_link || '#';
+
+            // Status
+            const closing = new Date(tender.closing_date);
+            const today = new Date();
+            const daysLeft = Math.ceil((closing - today) / (1000 * 60 * 60 * 24));
+            let statusClass = 'status-closed', statusText = 'Closed';
+            
+            if (daysLeft > 0) {
+                statusClass = daysLeft <= 7 ? 'status-closing' : 'status-active';
+                statusText = daysLeft <= 7 ? `⚡ Closing in ${daysLeft}d` : 'Active';
+            }
+            
+            document.getElementById('statusBadge').innerHTML = `<i class="fas fa-circle-check mr-2"></i>${statusText}`;
+            document.getElementById('statusBadge').className = `px-6 py-3 rounded-2xl font-bold text-white text-lg shadow-xl ${statusClass}`;
+
+            // Stats
+            document.getElementById('daysLeft').textContent = daysLeft > 0 ? `${daysLeft}d` : 'Closed';
+            document.getElementById('publishedDate').textContent = tender.published_date || 'N/A';
+            document.getElementById('closingDate').textContent = tender.closing_date || 'N/A';
+            document.getElementById('bidValidity').textContent = `${work['Bid Validity(Days)'] || 'N/A'} days`;
+
+            // Basic details
+            document.getElementById('tenderType').textContent = basic['Tender Type'] || 'N/A';
+            document.getElementById('tenderCategory').textContent = basic['Tender Category'] || 'N/A';
+            document.getElementById('formOfContract').textContent = basic['Form Of Contract'] || 'N/A';
+            document.getElementById('noOfCovers').textContent = basic['No. of Covers'] || 'N/A';
+            document.getElementById('paymentMode').textContent = basic['Payment Mode'] || 'N/A';
+
+            // Work details
+            document.getElementById('productCategory').textContent = work['Product Category'] || 'N/A';
+            document.getElementById('contractType').textContent = work['Contract Type'] || 'N/A';
+            document.getElementById('location').textContent = work.Location || 'N/A';
+            document.getElementById('pincode').textContent = work.Pincode || 'N/A';
+            document.getElementById('periodOfWork').textContent = `${work['Period Of Work(Days)'] || 'N/A'} days`;
+
+            // Dates
+            document.getElementById('pubDate').textContent = dates['Published Date'] || 'N/A';
+            document.getElementById('bidOpening').textContent = dates['Bid Opening Date'] || 'N/A';
+            document.getElementById('docStart').textContent = dates['Document Download / Sale Start Date'] || 'N/A';
+            document.getElementById('docEnd').textContent = dates['Document Download / Sale End Date'] || 'N/A';
+
+            // Covers
+            const coversList = document.getElementById('coversList');
+            coversList.innerHTML = covers.map((cover, index) => `
+                <div class="p-4 bg-white/50 rounded-xl border-l-4 border-blue-400 hover:shadow-md transition-all">
+                    <div class="font-semibold text-gray-800 mb-1">Cover ${cover.cover_no || index + 1}</div>
+                    <div class="text-sm text-gray-600">${cover.description || 'No description'}</div>
+                </div>
+            `).join('');
+        }
+
+        function copyTenderID() {
+            const tenderData = JSON.parse(localStorage.getItem('selectedTender') || '{}');
+            const id = tenderData.details?.basic_details?.['Tender ID'] || '';
+            if (id) {
+                navigator.clipboard.writeText(id).then(() => {
+                    showToast('Tender ID copied to clipboard! 📋');
+                });
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-2xl z-50 transform translate-x-full transition-transform';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

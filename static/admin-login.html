@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - TenderHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .glass {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="glass rounded-3xl p-12 w-full max-w-md shadow-2xl border">
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <i class="fas fa-shield-alt text-3xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-2">Admin Portal</h1>
+            <p class="text-white/80 text-lg">Enter credentials to access</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="adminLoginForm" class="space-y-6">
+            <div>
+                <label class="block text-white/90 font-medium mb-3">Email Address</label>
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-white/50"></i>
+                    <input 
+                        type="email" 
+                        id="adminEmail" 
+                        required 
+                        placeholder="admin@tenderhub.com"
+                        class="w-full pl-12 pr-4 py-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300"
+                    >
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-white/90 font-medium mb-3">Password</label>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-white/50"></i>
+                    <input 
+                        type="password" 
+                        id="adminPassword" 
+                        required 
+                        placeholder="••••••••"
+                        class="w-full pl-12 pr-4 py-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300"
+                    >
+                    <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Button -->
+            <button 
+                type="submit"
+                id="loginBtn"
+                class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all duration-300 border-0 focus:outline-none focus:ring-4 focus:ring-white/30"
+            >
+                <span class="flex items-center justify-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    <span id="loginText">Enter Admin Portal</span>
+                </span>
+            </button>
+        </form>
+
+        <!-- Status Messages -->
+        <div id="messageContainer" class="mt-6 hidden">
+            <div id="successMsg" class="bg-green-500/20 border border-green-500/50 text-green-100 p-4 rounded-xl backdrop-blur-sm hidden"></div>
+            <div id="errorMsg" class="bg-red-500/20 border border-red-500/50 text-red-100 p-4 rounded-xl backdrop-blur-sm hidden"></div>
+        </div>
+
+        <!-- Credentials Hint (Remove in production) -->
+        <div class="mt-8 p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-xl text-yellow-100 text-xs text-center hidden md:block">
+            <i class="fas fa-info-circle mr-1"></i>
+            Demo: admin tenderhubindia@gmail.com | Admintenderhubindia@78
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 pt-8 border-t border-white/20">
+            <p class="text-white/60 text-sm">TenderHub Admin Panel v2.0</p>
+        </div>
+    </div>
+
+    <script>
+        // 🔥 ADMIN CREDENTIALS (Client-side only)
+        const ADMIN_CREDENTIALS = {
+            email: 'admintenderhubindia@gmail.com',
+            password: 'Admintenderhubindia@78'
+        };
+
+        const form = document.getElementById('adminLoginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginText = document.getElementById('loginText');
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('adminPassword');
+        const emailInput = document.getElementById('adminEmail');
+
+        // Pre-fill credentials for demo (remove in production)
+        emailInput.value = ADMIN_CREDENTIALS.email;
+
+        // Toggle password visibility
+        toggleBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            toggleBtn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        // Form submission - PURE JS VALIDATION
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Show loading
+            loginBtn.disabled = true;
+            loginText.textContent = 'Validating...';
+            loginBtn.classList.remove('hover:scale-105');
+            
+            // 🔥 CLIENT-SIDE AUTHENTICATION ONLY
+            setTimeout(() => {
+                if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+                    // SUCCESS - Store in localStorage and redirect
+                    localStorage.setItem('admin_authenticated', 'true');
+                    localStorage.setItem('admin_email', email);
+                    
+                    showMessage('✅ Login successful! Redirecting...', 'success');
+                    
+                    // Add success animation
+                    loginBtn.classList.add('bg-green-500');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/admin';
+                    }, 1200);
+                    
+                } else {
+                    // FAIL - Shake animation + error
+                    loginBtn.classList.add('shake');
+                    setTimeout(() => loginBtn.classList.remove('shake'), 500);
+                    
+                    showMessage('❌ Invalid credentials!', 'error');
+                }
+                
+                // Reset button
+                loginBtn.disabled = false;
+                loginText.textContent = 'Enter Admin Portal';
+                loginBtn.classList.remove('bg-green-500');
+                loginBtn.classList.add('hover:scale-105');
+                
+            }, 800); // Fake delay for UX
+        });
+
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            const successMsg = document.getElementById('successMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            container.classList.remove('hidden');
+            
+            if (type === 'success') {
+                successMsg.textContent = message;
+                successMsg.classList.remove('hidden');
+                errorMsg.classList.add('hidden');
+            } else {
+                errorMsg.textContent = message;
+                errorMsg.classList.remove('hidden');
+                successMsg.classList.add('hidden');
+            }
+            
+            setTimeout(() => {
+                container.classList.add('hidden');
+                successMsg.classList.add('hidden');
+                errorMsg.classList.add('hidden');
+            }, 4000);
+        }
+
+        // Check if already logged in
+        if (localStorage.getItem('admin_authenticated') === 'true') {
+            window.location.href = '/admin';
+        }
+    </script>
+</body>
+</html>

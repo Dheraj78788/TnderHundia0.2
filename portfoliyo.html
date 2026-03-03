@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Rohit Suryawanshi | BCA AI/ML Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #e3f2fd, #f3e5f5, #e8f5e8, #fff3e0);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-glow {
+            box-shadow: 0 0 50px rgba(102, 126, 234, 0.4);
+            animation: heroGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            from { box-shadow: 0 0 50px rgba(102, 126, 234, 0.4); }
+            to { box-shadow: 0 0 80px rgba(102, 126, 234, 0.6); }
+        }
+
+        .floating-card {
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .floating-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 35px 80px -20px rgba(0, 0, 0, 0.25);
+        }
+
+        .skill-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 8px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: -1rem;
+            width: 3px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0.85rem;
+            width: 16px;
+            height: 16px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px rgba(67, 233, 123, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero-text { font-size: 2.5rem !important; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-slate-900">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-effect py-4 px-6 lg:px-12 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                    <i class="fas fa-code text-white text-2xl"></i>
+                </div>
+                <span class="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Rohit</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Home</a>
+                <a href="#about" class="font-semibold text-slate-700 hover:text-indigo-600 transition-colors">About</a>
+                <a href="#skills" class="font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Skills</a>
+                <a href="#experience" class="font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Experience</a>
+                <a href="#contact" class="font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Contact</a>
+            </div>
+            <button class="md:hidden text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-24 pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Hero Content -->
+                <div class="lg:pr-12">
+                    <div class="inline-block mb-8 px-6 py-3 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-3xl glass-effect border border-indigo-200">
+                        <span class="text-sm font-bold text-indigo-700 flex items-center space-x-2">
+                            <i class="fas fa-crown text-lg"></i>
+                            <span>BCA 3rd Year | AI/ML Intern | Full-Stack Developer</span>
+                        </span>
+                    </div>
+                    
+                    <h1 class="hero-text text-5xl lg:text-7xl font-black leading-tight mb-8 bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 bg-clip-text">
+                        Hi, I'm <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-2xl">Rohit Suryawanshi</span>
+                    </h1>
+                    
+                    <p class="text-xl lg:text-2xl text-slate-600 mb-10 leading-relaxed max-w-2xl">
+                        Building <span class="font-bold text-indigo-600">production-ready</span> government tender platforms with 
+                        <span class="font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">FastAPI</span>, 
+                        <span class="font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">Firebase</span> & 
+                        <span class="font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">AI/ML</span>
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#contact" class="px-10 py-5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-lg rounded-3xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 flex items-center space-x-3">
+                            <i class="fas fa-rocket text-xl"></i>
+                            <span>Start Project</span>
+                        </a>
+                        <a href="#skills" class="px-10 py-5 border-2 border-slate-200 font-bold text-lg rounded-3xl glass-effect hover:bg-slate-50 hover:shadow-xl transition-all duration-300 flex items-center space-x-3">
+                            <i class="fas fa-graduation-cap text-xl"></i>
+                            <span>View Skills</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-1 gap-8 lg:gap-0">
+                    <div class="floating-card glass-effect p-8 rounded-3xl text-center border border-indigo-100">
+                        <div class="text-4xl font-black text-indigo-600 mb-2">50+</div>
+                        <div class="text-slate-600 font-semibold">Government APIs Scraped</div>
+                    </div>
+                    <div class="floating-card glass-effect p-8 rounded-3xl text-center border border-emerald-100">
+                        <div class="text-4xl font-black text-emerald-600 mb-2">₹500Cr+</div>
+                        <div class="text-slate-600 font-semibold">Tender Value Tracked</div>
+                    </div>
+                    <div class="floating-card glass-effect p-8 rounded-3xl text-center border border-blue-100">
+                        <div class="text-4xl font-black text-blue-600 mb-2">10+</div>
+                        <div class="text-slate-600 font-semibold">Live Projects</div>
+                    </div>
+                    <div class="floating-card glass-effect p-8 rounded-3xl text-center border border-purple-100">
+                        <div class="text-4xl font-black text-purple-600 mb-2">100K+</div>
+                        <div class="text-slate-600 font-semibold">Tenders Indexed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 bg-white/60">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-24">
+                <div class="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl glass-effect mb-8">
+                    <span class="text-2xl font-bold text-white flex items-center space-x-3">
+                        <i class="fas fa-user-astronaut"></i>
+                        <span>About Me</span>
+                    </span>
+                </div>
+                <h2 class="text-6xl lg:text-7xl font-black bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text mb-6">
+                    Full-Stack Beast
+                </h2>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                    Ichalkaranji-based developer crafting enterprise-grade tender management systems for India's government ecosystem.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-12 items-center">
+                <!-- Profile Image -->
+                <div class="lg:col-span-1">
+                    <div class="floating-card glass-effect rounded-3xl p-8 border-8 border-white shadow-2xl relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10"></div>
+                        <div class="relative z-10 text-center">
+                            <div class="w-48 h-48 bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 rounded-3xl mx-auto mb-8 shadow-2xl border-8 border-white flex items-center justify-center">
+                                <i class="fas fa-user-engineer text-white text-7xl"></i>
+                            </div>
+                            <h3 class="text-4xl font-black text-slate-900 mb-4">Rohit Suryawanshi</h3>
+                            <div class="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-2xl shadow-lg">
+                                AI/ML Specialist
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-2 h-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div>
+                                <h4 class="text-2xl font-bold text-slate-900 mb-3 flex items-center space-x-3">
+                                    <i class="fas fa-graduation-cap text-emerald-500"></i>
+                                    <span>BCA 3rd Year - AI/ML Focus</span>
+                                </h4>
+                                <p class="text-lg text-slate-600 leading-relaxed">
+                                    Currently building production-ready full-stack applications with Python FastAPI, Firebase, and real-time data scraping systems.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-6">
+                            <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div>
+                                <h4 class="text-2xl font-bold text-slate-900 mb-3 flex items-center space-x-3">
+                                    <i class="fas fa-rocket text-blue-500"></i>
+                                    <span>Government Tender Expert</span>
+                                </h4>
+                                <p class="text-lg text-slate-600 leading-relaxed">
+                                    Specialized in scraping 50+ government tender portals (eprocure.gov.in, mptenders.gov.in, gem.gov.in) and building intelligent tender management dashboards.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-6">
+                            <div class="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div>
+                                <h4 class="text-2xl font-bold text-slate-900 mb-3 flex items-center space-x-3">
+                                    <i class="fas fa-brain text-purple-500"></i>
+                                    <span>AI/ML Projects</span>
+                                </h4>
+                                <p class="text-lg text-slate-600 leading-relaxed">
+                                    Face recognition attendance systems, intelligent tender classification, real-time data analytics, and predictive tender analytics.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="floating-card glass-effect p-8 rounded-3xl border border-slate-200 mt-12">
+                        <div class="flex items-center space-x-6">
+                            <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-xl">
+                                <i class="fas fa-map-marker-alt text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-bold text-slate-900 mb-2">📍 Ichalkaranji, Maharashtra</h4>
+                                <p class="text-lg text-slate-600">Building India's tender ecosystem from the heart of Maharashtra</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-emerald-50"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+            <div class="text-center mb-24">
+                <div class="inline-block px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl glass-effect mb-8">
+                    <span class="text-2xl font-bold text-white flex items-center space-x-3">
+                        <i class="fas fa-tools"></i>
+                        <span>Tech Arsenal</span>
+                    </span>
+                </div>
+                <h2 class="text-6xl lg:text-7xl font-black bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 bg-clip-text mb-6">
+                    Professional Skills
+                </h2>
+            </div>
+
+            <!-- Backend Skills -->
+            <div class="grid lg:grid-cols-2 gap-12 mb-20">
+                <div class="space-y-8">
+                    <h3 class="text-4xl font-black text-slate-900 flex items-center space-x-4">
+                        <i class="fas fa-server text-indigo-600 text-3xl"></i>
+                        <span>Backend Mastery</span>
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">FastAPI</span>
+                                <span class="text-emerald-600 font-bold text-lg">98%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">Firebase</span>
+                                <span class="text-emerald-600 font-bold text-lg">95%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">Python</span>
+                                <span class="text-emerald-600 font-bold text-lg">97%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 97%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frontend Skills -->
+                <div class="space-y-8">
+                    <h3 class="text-4xl font-bold text-slate-900 flex items-center space-x-4">
+                        <i class="fas fa-paint-brush text-pink-500 text-3xl"></i>
+                        <span>Frontend Pro</span>
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">Tailwind CSS</span>
+                                <span class="text-emerald-600 font-bold text-lg">96%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 96%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">JavaScript</span>
+                                <span class="text-emerald-600 font-bold text-lg">92%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">React</span>
+                                                               <span class="text-emerald-600 font-bold text-lg">88%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI/ML Skills -->
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <h3 class="text-4xl font-black text-slate-900 flex items-center space-x-4">
+                        <i class="fas fa-brain text-purple-600 text-3xl"></i>
+                        <span>AI/ML Expertise</span>
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">Machine Learning</span>
+                                <span class="text-emerald-600 font-bold text-lg">90%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">Computer Vision</span>
+                                <span class="text-emerald-600 font-bold text-lg">85%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-xl text-slate-900">Data Scraping</span>
+                                <span class="text-emerald-600 font-bold text-lg">99%</span>
+                            </div>
+                            <div class="skill-bar w-full mb-1">
+                                <div class="skill-progress" style="width: 99%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools & Deployment -->
+                <div class="space-y-8">
+                    <h3 class="text-4xl font-black text-slate-900 flex items-center space-x-4">
+                        <i class="fas fa-tools text-orange-500 text-3xl"></i>
+                        <span>DevOps & Tools</span>
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="floating-card glass-effect p-6 rounded-2xl border border-slate-200 hover:shadow-xl">
+                            <i class="fas fa-database text-blue-500 text-3xl mb-3"></i>
+                            <div class="font-bold text-lg">Firestore</div>
+                            <div class="text-emerald-600 font-bold">Production</div>
+                        </div>
+                        <div class="floating-card glass-effect p-6 rounded-2xl border border-slate-200 hover:shadow-xl">
+                            <i class="fas fa-cloud text-orange-500 text-3xl mb-3"></i>
+                            <div class="font-bold text-lg">Vercel</div>
+                            <div class="text-emerald-600 font-bold">Deployed</div>
+                        </div>
+                        <div class="floating-card glass-effect p-6 rounded-2xl border border-slate-200 hover:shadow-xl">
+                            <i class="fab fa-git-alt text-slate-700 text-3xl mb-3"></i>
+                            <div class="font-bold text-lg">Git</div>
+                            <div class="text-emerald-600 font-bold">Expert</div>
+                        </div>
+                        <div class="floating-card glass-effect p-6 rounded-2xl border border-slate-200 hover:shadow-xl">
+                            <i class="fas fa-terminal text-green-500 text-3xl mb-3"></i>
+                            <div class="font-bold text-lg">VS Code</div>
+                            <div class="text-emerald-600 font-bold">Daily</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience" class="py-32 bg-gradient-to-b from-white/70 via-slate-50 to-white/70">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-24">
+                <div class="inline-block px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 rounded-3xl glass-effect mb-8">
+                    <span class="text-2xl font-bold text-white flex items-center space-x-3">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Professional Journey</span>
+                    </span>
+                </div>
+                <h2 class="text-6xl lg:text-7xl font-black bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text mb-6">
+                    Work Experience
+                </h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-16">
+                <!-- Current Role -->
+                <div class="timeline-item floating-card glass-effect p-10 rounded-3xl border-l-8 border-indigo-500 shadow-2xl">
+                    <div class="timeline-dot bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-4xl font-black text-slate-900 mb-2">AI/ML Intern</h3>
+                            <div class="flex items-center space-x-6 text-xl font-semibold text-slate-600 mb-4">
+                                <span>TenderHub India</span>
+                                <span class="text-emerald-600">Present</span>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-8 py-4 rounded-2xl shadow-xl">
+                            Full-Time
+                        </div>
+                    </div>
+                    <ul class="space-y-4 text-lg text-slate-600">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                            <span>Built government tender scraping system for 50+ portals (₹500Cr+ value)</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                            <span>Production FastAPI + Firebase full-stack dashboard (10K+ users)</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                            <span>Face recognition attendance system (95% accuracy)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Education -->
+                <div class="timeline-item floating-card glass-effect p-10 rounded-3xl border-l-8 border-blue-500 shadow-2xl">
+                    <div class="timeline-dot bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-4xl font-black text-slate-900 mb-2">BCA (AI/ML)</h3>
+                            <div class="flex items-center space-x-6 text-xl font-semibold text-slate-600 mb-4">
+                                <span>Top University</span>
+                                <span class="text-emerald-600">2024-2027</span>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-4 rounded-2xl shadow-xl">
+                            3rd Year
+                        </div>
+                    </div>
+                    <ul class="space-y-4 text-lg text-slate-600">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                            <span>9.2 CGPA • Dean's List • AI/ML Specialization</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                            <span>Full-stack development track with cloud deployment</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-24">
+                <div class="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500/90 to-teal-600/90 backdrop-blur-xl rounded-3xl mb-8 shadow-2xl">
+                    <span class="text-2xl font-bold text-white flex items-center space-x-3">
+                        <i class="fas fa-envelope"></i>
+                        <span>Let's Connect</span>
+                    </span>
+                </div>
+                <h2 class="text-6xl lg:text-7xl font-black bg-gradient-to-r from-white to-slate-200 bg-clip-text mb-6 drop-shadow-2xl">
+                    Get In Touch
+                </h2>
+                <p class="text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                    Ready to build your next <span class="text-emerald-400 font-bold">production-grade</span> tender platform?
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Contact Info -->
+                <div class="space-y-8">
+                    <div class="floating-card glass-effect bg-white/20 backdrop-blur-xl p-10 rounded-3xl border border-white/30 text-white">
+                        <h3 class="text-4xl font-black mb-8 flex items-center space-x-4">
+                            <i class="fas fa-phone text-emerald-400 text-3xl"></i>
+                            <span>Contact Details</span>
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-center space-x-4 p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-all">
+                                <div class="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-envelope text-emerald-400 text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-xl mb-1">Email</div>
+                                    <a href="mailto:rohit@tenderhub.in" class="text-lg hover:text-emerald-300 transition-colors">rohit@tenderhub.in</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4 p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-all">
+                                <div class="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center">
+                                    <i class="fab fa-linkedin text-blue-400 text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-xl mb-1">LinkedIn</div>
+                                    <a href="#" class="text-lg hover:text-emerald-300 transition-colors">rohit-suryawanshi</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4 p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-all">
+                                <div class="w-14 h-14 bg-purple-500/20 rounded-2xl flex items-center justify-center">
+                                    <i class="fab fa-github text-purple-400 text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-xl mb-1">GitHub</div>
+                                    <a href="#" class="text-lg hover:text-emerald-300 transition-colors">rohit-suryawanshi</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4 p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-all">
+                                <div class="w-14 h-14 bg-orange-500/20 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt text-orange-400 text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-xl mb-1">Location</div>
+                                    <div class="text-lg">Ichalkaranji, Maharashtra, India</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div>
+                    <div class="floating-card glass-effect bg-white/20 backdrop-blur-xl p-10 rounded-3xl border border-white/30">
+                        <form class="space-y-6">
+                            <div>
+                                <label class="block text-xl font-bold text-white mb-3">Full Name</label>
+                                <input type="text" required class="w-full p-5 rounded-2xl border border-white/30 bg-white/20 backdrop-blur-xl text-white placeholder-slate-300 focus:border-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 transition-all text-lg" placeholder="Your Name">
+                            </div>
+                            <div>
+                                <label class="block text-xl font-bold text-white mb-3">Email</label>
+                                <input type="email" required class="w-full p-5 rounded-2xl border border-white/30 bg-white/20 backdrop-blur-xl text-white placeholder-slate-300 focus:border-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 transition-all text-lg" placeholder="your@email.com">
+                            </div>
+                            <div>
+                                <label class="block text-xl font-bold text-white mb-3">Project</label>
+                                <textarea rows="5" required class="w-full p-5 rounded-2xl border border-white/30 bg-white/20 backdrop-blur-xl text-white placeholder-slate-300 focus:border-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 transition-all text-lg resize-vertical" placeholder="Tell me about your tender project..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xl py-6 px-8 rounded-3xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3">
+                                <i class="fas fa-paper-plane text-2xl"></i>
+                                <span>Launch Project</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+            <div class="flex justify-center items-center space-x-6 mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                    <i class="fas fa-code text-white text-2xl"></i>
+                </div>
+                <div class="text-2xl font-black bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text">
+                    Rohit Suryawanshi
+                </div>
+            </div>
+            <p class="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+                Building India's Government Tender Ecosystem | <span class="font-bold text-emerald-600">₹500Cr+</span> Tracked
+            </p>
+            <div class="flex flex-wrap justify-center items-center space-x-6 text-lg font-semibold text-slate-600">
+                <a href="#" class="hover:text-indigo-600 transition-colors flex items-center space-x-2">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="#" class="hover:text-indigo-600 transition-colors flex items-center space-x-2">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="#" class="hover:text-emerald-600 transition-colors flex items-center space-x-2">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+            <div class="mt-12 text-sm text-slate-500">
+                © 2026 Rohit Suryawanshi. Built with ❤️ from Ichalkaranji, Maharashtra.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animate skill bars on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const skillBars = entry.target.querySelectorAll('.skill-progress');
+                    skillBars.forEach(bar => {
+                        bar.style.width = bar.style.width || '0%';
+                    });
+                }
+            });
+        }, observerOptions);
+
+        // Observe skills section
+        document.addEventListener('DOMContentLoaded', () => {
+            const skillsSection = document.getElementById('skills');
+            if (skillsSection) {
+                observer.observe(skillsSection);
+            }
+
+            // Form submission
+            const form = document.querySelector('form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Simulate form submission
+                const button = form.querySelector('button[type="submit"]');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending...';
+                button.disabled = true;
+
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-check-circle text-2xl mr-2"></i>Message Sent!';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                        form.reset();
+                    }, 2000);
+                }, 2000);
+            });
+
+            // Parallax effect for hero stats
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelectorAll('.floating-card');
+                parallax.forEach(card => {
+                    const speed = 0.5;
+                    card.style.transform = `translateY(${scrolled * speed * 0.1}px)`;
+                });
+            });
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.md\\:hidden').addEventListener('click', () => {
+            // Mobile menu functionality
+        });
+    </script>
+</body>
+</html>

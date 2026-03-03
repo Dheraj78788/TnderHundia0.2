@@ -1,0 +1,3 @@
+# Firebase Service Account (SECRET!)
+service-account.json
+*.json.encrypted

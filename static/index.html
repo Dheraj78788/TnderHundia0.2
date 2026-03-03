@@ -1,394 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TenderHub India - India's #1 Government Tenders Platform</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        
-        .gradient-primary {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
-        }
-        .gradient-secondary {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-        }
-        .gradient-gold {
-            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #facc15 100%);
-        }
-        .gradient-premium {
-            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card-hover:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        .float-animation { animation: float 6s ease-in-out infinite; }
-
-        @keyframes shimmer {
-            0% { background-position: -468px 0; }
-            100% { background-position: 468px 0; }
-        }
-        .shimmer {
-            background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
-            background-size: 300px 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
-        }
-        .pulse-glow { animation: pulse-glow 2s infinite; }
-
-        .premium-badge {
-            background: linear-gradient(45deg, #fbbf24, #f59e0b);
-            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
-        }
-
-        .plan-comparison th {
-            position: relative;
-        }
-        .plan-comparison th::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        .plan-comparison tr:hover th::after {
-            transform: scaleX(1);
-        }
-
-        .toast {
-            position: fixed; top: 24px; right: 24px; z-index: 10000;
-            transform: translateX(400px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-    </style>
+    <title>TenderHub India - Government Tenders Aggregator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 to-blue-50 overflow-x-hidden">
-    <!-- Enhanced Navbar -->
-    <nav class="gradient-primary text-white shadow-2xl sticky top-0 z-50 transition-all duration-300" id="navbar">
-        <div class="container mx-auto px-6 py-5">
-            <div class="flex justify-between items-center">
-                <a href="/" class="flex items-center space-x-3 group hover:scale-105 transition-all duration-300">
-                    <div class="w-12 h-12 gradient-gold rounded-2xl flex items-center justify-center shadow-2xl group-hover:animate-spin-slow">
-                        <i class="fas fa-file-contract text-xl text-slate-900 font-bold"></i>
-                    </div>
-                    <span class="text-2xl md:text-3xl font-black tracking-tight">TenderHub India</span>
+<body>
+
+    <!-- ✅ PERFECT NAVBAR - FIXED AUTH LOGIC + ABOUT -->
+    <nav class="navbar-main">
+        <div class="navbar-container">
+            <a href="/" class="navbar-logo-group">
+                <div class="navbar-logo-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <span class="navbar-logo-text">TenderHub India</span>
+            </a>
+
+            <!-- DESKTOP MENU -->
+            <div class="navbar-desktop-menu hidden-mobile">
+                <a href="/" class="navbar-desktop-link navbar-link-home">
+                    <i class="fas fa-home"></i><span>Home</span>
                 </a>
-                <div class="flex items-center space-x-6" id="navRight">
-                    <a href="/" class="hover:text-blue-200 font-semibold flex items-center space-x-2 group transition-all">
-                        <i class="fas fa-home text-xl group-hover:-translate-x-1"></i>
-                        <span>Home</span>
+                <a href="/tenders" class="navbar-desktop-link navbar-link-tenders">
+                    <i class="fas fa-list"></i><span>All Tenders</span>
+                </a>
+
+                <!-- 🔥 NEW ABOUT LINK -->
+                <a href="/about" class="navbar-desktop-link navbar-link-about">
+                    <i class="fas fa-info-circle"></i><span>About</span>
+                </a>
+
+                <a href="#features-section" class="navbar-desktop-link navbar-link-features">
+                    <i class="fas fa-rocket"></i><span>Features</span>
+                </a>
+
+                <a href="#pricing-section" class="navbar-desktop-link navbar-link-pricing">
+                    <i class="fas fa-crown"></i><span>Pricing</span>
+                </a>
+
+                <!-- 🔥 AUTH SECTION - PERFECT LOGIC -->
+                <div class="navbar-auth-section">
+                    <!-- ✅ Sign In - SHOW ONLY WHEN LOGGED OUT -->
+                    <a href="/auth.html" class="navbar-signin-btn" id="desktopSignin">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Sign In</span>
                     </a>
-                    <a href="/tenders" class="hover:text-blue-200 font-semibold flex items-center space-x-2 group transition-all">
-                        <i class="fas fa-list text-xl group-hover:-translate-x-1"></i>
-                        <span>All Tenders</span>
-                    </a>
-                    <a href="#features" class="hover:text-blue-200 font-semibold flex items-center space-x-2 group transition-all">
-                        <i class="fas fa-rocket text-xl group-hover:-translate-x-1"></i>
-                        <span>Features</span>
-                    </a>
-                    <a href="#pricing" class="hover:text-blue-200 font-semibold flex items-center space-x-2 group transition-all">
-                        <i class="fas fa-crown text-xl group-hover:-translate-x-1"></i>
-                        <span>Pricing</span>
-                    </a>
-                    <!-- Auth Button -->
-                    <div class="relative">
-                        <button id="authBtn" class="flex items-center space-x-3 px-6 py-3 glass-effect rounded-3xl hover:bg-white/20 font-semibold backdrop-blur-xl transition-all group">
-                            <i id="authIcon" class="fas fa-user-circle text-2xl"></i>
-                            <span id="authText">Sign In</span>
-                        </button>
+
+                    <!-- ✅ Profile - SHOW ONLY WHEN LOGGED IN -->
+                    <div class="navbar-profile-container hidden" id="desktopProfile">
+                        <a href="#" class="navbar-profile-trigger" id="desktopProfileTrigger">
+                            <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+                            <span id="desktopProfileName">Profile</span>
+                            <i class="fas fa-chevron-down" style="font-size: 12px; margin-left: 4px;"></i>
+                        </a>
+
+                        <!-- Profile Dropdown -->
+                        <div class="navbar-profile-dropdown" id="desktopProfileDropdown">
+                            <a href="/profile" class="navbar-profile-item">
+                                <i class="fas fa-user"></i><span>My Profile</span>
+                            </a>
+                            <a href="/favorites" class="navbar-profile-item">
+                                <i class="fas fa-heart"></i><span>Favorites</span>
+                            </a>
+                            <a href="#" class="navbar-profile-item" id="desktopLogout">
+                                <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-mobile-toggle hidden-desktop" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
 
-    <!-- User Dropdown -->
-    <div id="userDropdown" class="absolute right-6 mt-3 w-96 bg-white/95 backdrop-blur-3xl rounded-3xl shadow-3xl border border-white/50 hidden py-4 z-50 overflow-hidden fade-in-up">
-        <div class="px-8 py-8 border-b border-slate-100 gradient-primary/10">
-            <div id="userName" class="text-3xl font-black text-slate-800 mb-2"></div>
-            <div id="userEmail" class="text-xl text-slate-600"></div>
-        </div>
-        <a href="/favorites" class="flex items-center px-8 py-6 hover:bg-indigo-50 font-semibold border-b border-slate-100 group">
-            <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mr-6 group-hover:scale-110 transition-all">
-                <i class="fas fa-heart text-2xl text-white"></i>
+    <!-- ✅ MOBILE MENU -->
+    <div class="navbar-mobile-menu hidden" id="mobileMenu">
+        <div class="navbar-mobile-header">
+            <div class="navbar-logo-icon-small">
+                <i class="fas fa-file-contract"></i>
             </div>
-            <span>My Favorites (<span id="favoritesCount">0</span>)</span>
-        </a>
-        <a href="/profile" class="flex items-center px-8 py-6 hover:bg-slate-50 font-semibold border-b border-slate-100 group">
-            <i class="fas fa-cog mr-6 text-2xl text-slate-500 group-hover:text-indigo-500"></i>
-            <span>Profile Settings</span>
-        </a>
-        <button id="signoutBtn" class="w-full text-left flex items-center px-8 py-6 hover:bg-red-50 text-red-700 font-semibold">
-            <i class="fas fa-sign-out-alt mr-6 text-2xl"></i>
-            <span>Sign Out</span>
-        </button>
-    </div>
+            <span class="navbar-logo-text-small">TenderHub</span>
+            <button class="navbar-mobile-close" id="mobileClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
-    <!-- Auth Modal -->
-    <div id="authModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
-        <div class="bg-white/90 backdrop-blur-3xl rounded-4xl shadow-4xl max-w-md w-full max-h-[90vh] overflow-hidden fade-in-up">
-            <div class="p-10">
-                <div class="flex justify-between items-center mb-10">
-                    <h2 id="modalTitle" class="text-4xl font-black text-slate-800">Welcome Back</h2>
-                    <button id="closeModal" class="text-3xl text-slate-500 hover:text-slate-700 p-3 rounded-3xl hover:bg-slate-100 transition-all">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <form id="authForm" class="space-y-6 mb-10">
-                    <div>
-                        <input type="email" id="emailInput" required
-                            class="w-full p-5 border-2 border-slate-200 rounded-3xl focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-100 text-xl transition-all shadow-xl hover:shadow-2xl"
-                            placeholder="your.email@company.com">
-                    </div>
-                    <div>
-                        <input type="password" id="passwordInput" required
-                            class="w-full p-5 border-2 border-slate-200 rounded-3xl focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-100 text-xl transition-all shadow-xl hover:shadow-2xl"
-                            placeholder="Enter your password">
-                    </div>
-                    <button type="submit" id="submitAuth" class="w-full gradient-primary hover:gradient-primary/90 text-white font-black py-6 px-10 rounded-4xl text-2xl shadow-3xl hover:shadow-4xl transition-all transform hover:-translate-y-1 pulse-glow">
-                        <span id="authBtnText">Sign In</span>
-                    </button>
-                </form>
-                <div class="relative mb-8">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-slate-200"></div>
-                    </div>
-                    <div class="relative flex justify-center">
-                        <span class="px-8 bg-white text-xl text-slate-500 font-semibold">or</span>
-                    </div>
-                </div>
-                <button id="googleSignIn" type="button" class="w-full flex items-center justify-center space-x-4 px-8 py-5 border-2 border-slate-200 rounded-4xl hover:border-indigo-400 hover:shadow-2xl transition-all bg-white font-semibold text-xl hover:bg-indigo-50">
-                    <i class="fab fa-google text-2xl"></i>
-                    <span>Continue with Google</span>
-                </button>
-                <div class="mt-12 text-center">
-                    <button type="button" id="toggleAuthMode" class="text-indigo-600 hover:text-indigo-700 font-bold text-2xl">
-                        <span id="toggleText">Don't have an account? </span><strong>Join Now</strong>
-                    </button>
-                </div>
+        <div class="navbar-mobile-links">
+            <a href="/" class="navbar-mobile-link">
+                <i class="fas fa-home"></i><span>Home</span>
+            </a>
+            <a href="/tenders" class="navbar-mobile-link">
+                <i class="fas fa-list"></i><span>All Tenders</span>
+            </a>
+
+            <!-- 🔥 NEW ABOUT LINK -->
+            <a href="/about" class="navbar-mobile-link">
+                <i class="fas fa-info-circle"></i><span>About</span>
+            </a>
+
+            <a href="#features-section" class="navbar-mobile-link">
+                <i class="fas fa-rocket"></i><span>Features</span>
+            </a>
+            <a href="#pricing-section" class="navbar-mobile-link">
+                <i class="fas fa-crown"></i><span>Pricing</span>
+            </a>
+
+            <!-- 🔥 MOBILE AUTH - PERFECT LOGIC -->
+            <!-- Sign In - SHOW ONLY WHEN LOGGED OUT -->
+            <a href="/auth.html" class="navbar-mobile-link navbar-mobile-signin" id="mobileSignin">
+                <i class="fas fa-sign-in-alt"></i><span>Sign In</span>
+            </a>
+
+            <!-- Profile - SHOW ONLY WHEN LOGGED IN -->
+            <div class="navbar-mobile-profile hidden" id="mobileProfile">
+                <a href="/profile" class="navbar-mobile-link">
+                    <i class="fas fa-user-circle"></i><span id="mobileProfileName">Profile</span>
+                </a>
+                <a href="/favorites" class="navbar-mobile-link">
+                    <i class="fas fa-heart"></i><span>Favorites</span>
+                </a>
+                <a href="#" class="navbar-mobile-link navbar-mobile-logout" id="mobileLogout">
+                    <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toastContainer"></div>
 
-    <!-- Hero Section with Parallax -->
-    <section class="gradient-primary text-white py-48 relative overflow-hidden">
-        <div class="absolute inset-0">
-            <div class="absolute top-20 left-20 w-96 h-96 bg-white/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-            <div class="absolute top-40 right-20 w-96 h-96 bg-yellow-300/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-            <div class="absolute -bottom-8 left-1/4 w-96 h-96 bg-cyan-300/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+    <!-- HERO SECTION -->
+    <section class="hero-section-main">
+        <div class="hero-bg-blobs">
+            <div class="hero-blob-1"></div>
+            <div class="hero-blob-2"></div>
         </div>
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <div class="fade-in-up" style="animation-delay: 0.2s">
-                <div class="inline-block mb-8 p-4 glass-effect rounded-3xl backdrop-blur-xl">
-                    <span class="px-6 py-2 bg-gradient-gold text-slate-900 font-bold text-xl rounded-2xl shimmer">🚀 Live Now - 135+ Portals</span>
+
+        <div class="hero-content-main scroll-reveal-anim">
+            <div class="hero-badge-wrapper">
+                <span class="hero-badge-text">
+                    <i class="fas fa-bolt"></i>
+                    🚀 Live Now - 150+ Portals
+                </span>
+            </div>
+
+            <h1 class="hero-title-main">TenderHub India</h1>
+            <p class="hero-subtitle-main">
+                India's #1 Government Tenders Aggregator<br>
+                <span class="hero-highlight-stats">₹75 Lakh Crore Annual Value • Real-time Updates • 99.9% Uptime</span>
+            </p>
+
+            <div class="hero-buttons-wrapper">
+                <a href="/tenders" class="hero-btn-primary hero-btn-explore">
+                    <i class="fas fa-search"></i>
+                    <span>Explore 50K+ Tenders</span>
+                </a>
+                <a href="#features-section" class="hero-btn-secondary hero-btn-features">
+                    <i class="fas fa-rocket"></i>
+                    <span>Why TenderHub?</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FEATURES SECTION -->
+    <section id="features-section" class="features-section-main">
+        <div class="features-container">
+            <div class="features-header scroll-reveal-anim">
+                <h2 class="features-title-main">Why Choose TenderHub?</h2>
+                <p class="features-subtitle-main">Solving India's ₹75 Lakh Crore fragmented government procurement
+                    challenge</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card-main feature-card-portals scroll-reveal-anim">
+                    <div class="feature-icon-circle feature-icon-primary">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-title-text feature-title-portals">150+ Portals</h3>
+                    <p class="feature-desc-text">Unified dashboard for CPPP, GeM, Delhi, Maharashtra, Defence & every
+                        state portal</p>
                 </div>
-                <h1 class="text-6xl md:text-8xl lg:text-9xl font-black mb-8 leading-tight bg-gradient-to-r from-white via-blue-100 to-indigo-100 bg-clip-text">
-                    TenderHub India
-                </h1>
-                <p class="text-2xl md:text-4xl mb-12 max-w-6xl mx-auto opacity-95 leading-relaxed">
-                    India's #1 Government Tenders Aggregator<br>
-                    <span class="font-black text-yellow-300 text-3xl">₹75 Lakh Crore Annual Value • Real-time Updates • 99.9% Uptime</span>
-                </p>
-                <div class="flex flex-col lg:flex-row gap-8 justify-center items-center max-w-5xl mx-auto mb-20">
-                    <a href="/tenders" class="group glass-effect bg-white/90 text-slate-900 font-black py-10 px-20 rounded-4xl text-3xl shadow-4xl hover:shadow-5xl transform hover:-translate-y-4 transition-all duration-700 hover:bg-white backdrop-blur-xl flex items-center space-x-6 pulse-glow">
-                        <i class="fas fa-search text-4xl group-hover:animate-bounce"></i>
-                        <span>Explore 50K+ Tenders</span>
-                        <div class="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-                    </a>
-                    <a href="#features" class="border-4 border-white/50 text-white font-black py-10 px-20 rounded-4xl text-3xl hover:bg-white/20 hover:border-white transition-all duration-500 hover:shadow-4xl transform hover:-translate-y-3 flex items-center space-x-6">
-                        <i class="fas fa-rocket text-4xl"></i>
-                        <span>Why TenderHub?</span>
-                    </a>
+
+                <div class="feature-card-main feature-card-scraping scroll-reveal-anim">
+                    <div class="feature-icon-circle feature-icon-gold">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title-text feature-title-scraping">Real-time Scraping</h3>
+                    <p class="feature-desc-text">Playwright + BeautifulSoup automation across 12 high-volume government
+                        sites</p>
+                </div>
+
+                <div class="feature-card-main feature-card-ai scroll-reveal-anim">
+                    <div class="feature-icon-circle feature-icon-premium">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title-text feature-title-ai">AI Smart Filters</h3>
+                    <p class="feature-desc-text">Instant AI-powered search, filter & sort + predictive tender matching
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-40 bg-white/50 backdrop-blur-sm">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-32 fade-in-up">
-                <h2 class="text-6xl md:text-8xl font-black text-slate-800 mb-8">Why Choose TenderHub?</h2>
-                <p class="text-3xl text-slate-600 max-w-5xl mx-auto leading-relaxed">Solving India's ₹75 Lakh Crore fragmented government procurement challenge</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-16">
-                <div class="group card-hover text-center p-16 rounded-5xl glass-effect backdrop-blur-xl border border-white/30 hover:border-indigo-300 transition-all">
-                    <div class="w-32 h-32 gradient-primary rounded-4xl mx-auto mb-12 flex items-center justify-center group-hover:scale-125 transition-all duration-500 shadow-3xl float-animation">
-                        <i class="fas fa-globe text-4xl text-white"></i>
-                    </div>
-                    <h3 class="text-4xl font-black text-slate-800 mb-8">150+ Portals</h3>
-                    <p class="text-2xl text-slate-600 leading-relaxed max-w-md mx-auto">Unified dashboard for CPPP, GeM, Delhi, Maharashtra, Defence & every state portal</p>
+
+    <!-- STATS SECTION -->
+    <section class="stats-section-main">
+        <div class="stats-container">
+            <div class="stats-grid">
+                <!-- Websites (8 portals) -->
+                <div class="stat-item-main scroll-reveal-anim stat-websites">
+                    <div class="stat-number-main" data-target="8" id="statWebsites">0</div>
+                    <div class="stat-label-text">Portals</div>
                 </div>
-                <div class="group card-hover text-center p-16 rounded-5xl glass-effect backdrop-blur-xl border border-white/30 hover:border-emerald-300 transition-all">
-                    <div class="w-32 h-32 gradient-gold rounded-4xl mx-auto mb-12 flex items-center justify-center group-hover:scale-125 transition-all duration-500 shadow-3xl float-animation">
-                        <i class="fas fa-bolt text-4xl text-slate-900"></i>
-                    </div>
-                    <h3 class="text-4xl font-black text-slate-800 mb-8">Real-time Scraping</h3>
-                    <p class="text-2xl text-slate-600 leading-relaxed max-w-md mx-auto">Playwright + BeautifulSoup automation across 12 high-volume government sites</p>
+
+                <!-- Organizations (Demo: 45 - update with your real count) -->
+                <div class="stat-item-main scroll-reveal-anim stat-orgs">
+                    <div class="stat-number-main" data-target="45" id="statOrgs">0</div>
+                    <div class="stat-label-text">Organizations</div>
                 </div>
-                <div class="group card-hover text-center p-16 rounded-5xl glass-effect backdrop-blur-xl border border-white/30 hover:border-purple-300 transition-all">
-                    <div class="w-32 h-32 gradient-premium rounded-4xl mx-auto mb-12 flex items-center justify-center group-hover:scale-125 transition-all duration-500 shadow-3xl float-animation">
-                        <i class="fas fa-brain text-4xl text-white"></i>
-                    </div>
-                    <h3 class="text-4xl font-black text-slate-800 mb-8">AI Smart Filters</h3>
-                    <p class="text-2xl text-slate-600 leading-relaxed max-w-md mx-auto">Instant AI-powered search, filter & sort + predictive tender matching</p>
+
+                <!-- Total Tenders (276) -->
+                <div class="stat-item-main scroll-reveal-anim stat-tenders">
+                    <div class="stat-number-main" data-target="276" id="statTenders">0</div>
+                    <div class="stat-label-text">Total Tenders</div>
+                </div>
+
+                <!-- Uptime (Fixed) -->
+                <div class="stat-item-main scroll-reveal-anim stat-uptime">
+                    <div class="stat-number-main" data-target="99.9%">0</div>
+                    <div class="stat-label-text">99.9% Uptime</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-40 gradient-secondary text-white">
-        <div class="container mx-auto px-6">
-            <div class="grid lg:grid-cols-4 gap-20 text-center">
-                <div class="fade-in-up" style="animation-delay: 0.1s">
-                    <div class="text-7xl lg:text-8xl font-black mb-6 bg-gradient-gold bg-clip-text">150+</div>
-                    <div class="text-3xl font-semibold opacity-90">Portals Covered</div>
-                </div>
-                <div class="fade-in-up" style="animation-delay: 0.2s">
-                    <div class="text-7xl lg:text-8xl font-black mb-6 bg-gradient-gold bg-clip-text">₹75L Cr</div>
-                    <div class="text-3xl font-semibold opacity-90">Annual Tender Value</div>
-                </div>
-                <div class="fade-in-up" style="animation-delay: 0.3s">
-                    <div class="text-7xl lg:text-8xl font-black mb-6 bg-gradient-gold bg-clip-text">Live</div>
-                    <div class="text-3xl font-semibold opacity-90">Real-time Updates</div>
-                </div>
-                <div class="fade-in-up" style="animation-delay: 0.4s">
-                    <div class="text-7xl lg:text-8xl font-black mb-6 bg-gradient-gold bg-clip-text">12</div>
-                    <div class="text-3xl font-semibold opacity-90">Core Sites</div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- NEW Premium Pricing Section -->
-    <section id="pricing" class="py-40 bg-gradient-to-b from-slate-50 to-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-32 fade-in-up">
-                <h2 class="text-6xl md:text-8xl font-black text-slate-800 mb-8">Choose Your Plan</h2>
-                <p class="text-3xl text-slate-600 max-w-4xl mx-auto leading-relaxed mb-12">Start free. Upgrade anytime. Cancel monthly.</p>
-                <div class="inline-block p-1 rounded-3xl bg-slate-200 mb-12">
-                    <button class="px-8 py-3 font-bold text-xl rounded-3xl bg-white shadow-lg" id="toggleBilling">Annual (Save 20%)</button>
+    <!-- PRICING SECTION -->
+    <section id="pricing-section" class="pricing-section-main">
+        <div class="pricing-container">
+            <div class="pricing-header scroll-reveal-anim">
+                <h2 class="pricing-title-main">Choose Your Plan</h2>
+                <p class="pricing-subtitle-main">Start free. Upgrade anytime. Cancel monthly. No contracts.</p>
+                <div class="pricing-toggle-wrapper">
+                    <button class="pricing-toggle-btn" id="pricingToggleBtn">Annual (Save 25%)</button>
                 </div>
             </div>
 
-            <div class="max-w-6xl mx-auto">
-                <!-- Pricing Cards -->
-                <div class="grid lg:grid-cols-2 gap-12 mb-20">
-                    <!-- Free Plan -->
-                    <div class="relative group card-hover p-12 lg:p-16 rounded-5xl border-4 border-slate-200 hover:border-indigo-400 transition-all bg-white shadow-2xl hover:shadow-4xl">
-                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                            <span class="px-6 py-2 bg-slate-100 text-slate-700 font-bold text-lg rounded-3xl">Most Popular</span>
+
+            <div class="pricing-plans-wrapper">
+                <div class="pricing-plans-grid">
+                    <!-- Starter Plan -->
+                    <div class="pricing-card-main pricing-card-starter">
+                        <div class="pricing-badge-wrapper">
+                            <span class="pricing-badge-text">Most Popular</span>
                         </div>
-                        <div class="text-center">
-                            <h3 class="text-4xl font-black text-slate-800 mb-6">Starter</h3>
-                            <div class="text-6xl font-black text-slate-900 mb-6" id="freePrice">₹0 <span class="text-3xl text-slate-500 font-normal">/month</span></div>
-                            <ul class="text-left space-y-4 mb-12 text-xl text-slate-700 max-w-md mx-auto">
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-500 mr-4 text-2xl"></i>50 Tenders/day</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-500 mr-4 text-2xl"></i>Basic Filters</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-500 mr-4 text-2xl"></i>10 Favorites</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-500 mr-4 text-2xl"></i>Email Alerts (Daily)</li>
-                                <li class="flex items-center opacity-50"><i class="fas fa-times text-red-500 mr-4 text-2xl"></i>AI Insights</li>
+                        <div class="pricing-card-content">
+                            <h3 class="pricing-plan-title">Starter</h3>
+                            <div class="pricing-price-main" id="starterPrice">₹0 <span
+                                    class="pricing-price-period">/month</span></div>
+                            <ul class="pricing-features-list">
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>50 Tenders/day</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Basic Filters</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>10 Favorites</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Email Alerts (Daily)</li>
+                                <li class="pricing-feature-item pricing-feature-disabled"><i class="fas fa-times"></i>AI
+                                    Insights</li>
                             </ul>
-                            <a href="/auth" class="w-full block bg-gradient-primary text-white font-black py-8 px-12 rounded-4xl text-2xl shadow-3xl hover:shadow-4xl transform hover:-translate-y-2 transition-all group-hover:bg-indigo-700">
-                                Get Started - Free
-                            </a>
+                            <!-- ✅ CLICKING THIS NOW GOES TO /tenders INSTEAD OF /auth -->
+                            <a href="/tenders" class="pricing-cta-btn pricing-starter-cta">Get Started - Free</a>
                         </div>
                     </div>
 
-                    <!-- Premium Plan -->
-                    <div class="relative group card-hover p-12 lg:p-16 rounded-5xl border-4 border-transparent bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-500 hover:shadow-5xl shadow-4xl transform hover:scale-[1.02] transition-all z-10">
-                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                            <span class="px-8 py-3 premium-badge text-slate-900 font-black text-xl rounded-3xl shadow-2xl">PREMIUM</span>
+
+                    <!-- Pro Plan -->
+                    <div class="pricing-card-main pricing-card-pro">
+                        <div class="pricing-badge-wrapper">
+                            <span class="pricing-badge-premium">PREMIUM</span>
                         </div>
-                        <div class="text-center text-white">
-                            <div class="w-24 h-24 mx-auto mb-8 bg-white/20 rounded-4xl flex items-center justify-center">
-                                <i class="fas fa-crown text-3xl text-yellow-400"></i>
+                        <div class="pricing-card-content">
+                            <div class="pricing-crown-icon">
+                                <i class="fas fa-crown"></i>
                             </div>
-                            <h3 class="text-4xl font-black mb-6">Pro</h3>
-                            <div class="text-6xl font-black mb-6" id="premiumPrice">₹99 <span class="text-3xl font-normal">/month</span></div>
-                            <ul class="text-left space-y-4 mb-12 text-xl max-w-md mx-auto">
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-400 mr-4 text-2xl"></i>Unlimited Tenders</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-400 mr-4 text-2xl"></i>AI Smart Filters</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-400 mr-4 text-2xl"></i>Unlimited Favorites</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-400 mr-4 text-2xl"></i>Real-time Alerts</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-400 mr-4 text-2xl"></i>Priority Support</li>
-                                <li class="flex items-center"><i class="fas fa-check text-emerald-400 mr-4 text-2xl"></i>Tender Win Probability</li>
+                            <h3 class="pricing-plan-title">Pro</h3>
+                            <div class="pricing-price-main" id="proPrice">₹99 <span
+                                    class="pricing-price-period">/month</span></div>
+                            <ul class="pricing-features-list">
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Unlimited Tenders</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>AI Smart Filters</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Unlimited Favorites</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Real-time Alerts</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Priority Support</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Tender Win Probability</li>
                             </ul>
-                            <a href="/premium" class="w-full block bg-white text-purple-600 font-black py-8 px-12 rounded-4xl text-2xl shadow-4xl hover:shadow-5xl transform hover:-translate-y-2 hover:scale-105 transition-all font-extrabold">
-                                Start Premium Trial
-                            </a>
-                            <p class="text-white/90 mt-6 text-lg font-semibold">14-day money back guarantee</p>
+                            <!-- This button still goes to upgrade (premium) -->
+                            <a href="/premium" class="pricing-cta-btn pricing-pro-cta">Start 14-Day Trial</a>
+                            <p class="pricing-guarantee-text">✅ 14-day money back guarantee</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Feature Comparison Table -->
-                <div class="plan-comparison overflow-x-auto">
-                    <table class="w-full text-left text-xl">
+
+                <!-- Comparison Table -->
+                <div class="pricing-table-wrapper scroll-reveal-anim">
+                    <table class="pricing-comparison-table">
                         <thead>
                             <tr>
-                                <th class="pb-8 pt-12 font-black text-2xl text-slate-800">Features</th>
-                                <th class="pb-8 pt-12 text-center font-black text-3xl text-slate-800 bg-slate-100 rounded-l-3xl">Starter</th>
-                                <th class="pb-8 pt-12 text-center font-black text-4xl text-white bg-gradient-premium text-transparent bg-clip-text rounded-r-3xl">Pro</th>
+                                <th class="table-header-features">Features</th>
+                                <th class="table-header-starter">Starter</th>
+                                <th class="table-header-pro">Pro</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-200">
-                            <tr class="hover:bg-slate-50 group">
-                                <td class="py-6 font-semibold text-slate-700">Tenders per day</td>
-                                <td class="py-6 text-center text-slate-600">50</td>
-                                <td class="py-6 text-center text-emerald-600 font-bold">Unlimited</td>
+                        <tbody>
+                            <tr class="table-row-tenders">
+                                <td class="table-cell-feature">Tenders per day</td>
+                                <td class="table-cell-starter">50</td>
+                                <td class="table-cell-pro">Unlimited</td>
                             </tr>
-                            <tr class="hover:bg-slate-50 group">
-                                <td class="py-6 font-semibold text-slate-700">AI Smart Filters</td>
-                                <td class="py-6 text-center opacity-50">❌</td>
-                                <td class="py-6 text-center text-emerald-600 font-bold">✅</td>
+                            <tr class="table-row-ai">
+                                <td class="table-cell-feature">AI Smart Filters</td>
+                                <td class="table-cell-starter table-cell-disabled">❌</td>
+                                <td class="table-cell-pro">✅</td>
                             </tr>
-                            <tr class="hover:bg-slate-50 group">
-                                <td class="py-6 font-semibold text-slate-700">Real-time Alerts</td>
-                                <td class="py-6 text-center text-slate-600">Daily</td>
-                                <td class="py-6 text-center text-emerald-600 font-bold">Instant</td>
+                            <tr class="table-row-alerts">
+                                <td class="table-cell-feature">Real-time Alerts</td>
+                                <td class="table-cell-starter">Daily</td>
+                                <td class="table-cell-pro">Instant</td>
                             </tr>
-                            <tr class="hover:bg-slate-50 group">
-                                <td class="py-6 font-semibold text-slate-700">Win Probability Score</td>
-                                <td class="py-6 text-center opacity-50">❌</td>
-                                <td class="py-6 text-center text-emerald-600 font-bold">✅</td>
+                            <tr class="table-row-probability">
+                                <td class="table-cell-feature">Win Probability Score</td>
+                                <td class="table-cell-starter table-cell-disabled">❌</td>
+                                <td class="table-cell-pro">✅</td>
                             </tr>
                         </tbody>
                     </table>
@@ -397,260 +349,411 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-40 gradient-primary text-white">
-        <div class="container mx-auto px-6 text-center">
-            <div class="fade-in-up max-w-5xl mx-auto">
-                <h2 class="text-6xl md:text-8xl font-black mb-12">Ready to Win More Contracts?</h2>
-                <p class="text-3xl mb-16 opacity-95 leading-relaxed max-w-4xl mx-auto">
-                    Stop wasting hours across fragmented portals. Start winning government contracts with India's smartest tender platform.
-                </p>
-                <div class="flex flex-col lg:flex-row gap-8 justify-center items-center">
-                    <a href="/tenders" class="group gradient-gold text-slate-900 font-black py-12 px-24 rounded-5xl text-3xl shadow-4xl hover:shadow-5xl transform hover:-translate-y-6 hover:rotate-1 transition-all duration-700 flex items-center space-x-8 backdrop-blur-xl">
-                        <i class="fas fa-rocket text-5xl group-hover:rotate-12 group-hover:scale-110"></i>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section-main">
+        <div class="cta-container">
+            <div class="cta-content-wrapper scroll-reveal-anim">
+                <h2 class="cta-title-main">Ready to Win More Contracts?</h2>
+                <p class="cta-subtitle-main">Stop wasting hours across fragmented portals. Start winning government
+                    contracts with India's smartest tender platform.</p>
+                <div class="cta-buttons-wrapper">
+                    <a href="/tenders" class="cta-main-btn">
+                        <i class="fas fa-rocket"></i>
                         <span>Start Winning Tenders Now</span>
                     </a>
-                    <div class="p-12 glass-effect backdrop-blur-3xl rounded-4xl border border-white/30 shadow-3xl">
-                        <i class="fas fa-shield-alt text-5xl text-emerald-400 mb-6"></i>
-                        <p class="font-bold text-2xl">Login to save favorites & track opportunities across all devices</p>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Enhanced Footer -->
-    <footer class="gradient-secondary text-white py-20">
-        <div class="container mx-auto px-6 text-center">
-            <div class="flex items-center justify-center space-x-6 mb-12">
-                <div class="w-16 h-16 gradient-gold rounded-3xl flex items-center justify-center shadow-3xl">
-                    <i class="fas fa-file-contract text-2xl text-slate-900"></i>
+
+    <!-- FOOTER SECTION -->
+    <footer class="footer-section-main">
+        <div class="footer-container">
+            <div class="footer-main-grid">
+                <!-- Brand Section -->
+                <div class="footer-brand-section">
+                    <div class="footer-brand-logo">
+                        <div class="footer-logo-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <span class="footer-logo-text">TenderHub India</span>
+                    </div>
+                    <p class="footer-brand-desc">India's premier government tenders aggregator. Track ₹75 Lakh Crore
+                        worth of opportunities across 150+ portals.</p>
+                    <div class="footer-social-links">
+                        <a href="#" class="footer-social-link footer-social-linkedin">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="footer-social-link footer-social-twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="footer-social-link footer-social-github">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
                 </div>
-                <span class="text-4xl font-black tracking-tight">TenderHub India</span>
+
+
+                <!-- Product Links -->
+                <div class="footer-links-section footer-product-links">
+                    <h4 class="footer-links-title">Product</h4>
+                    <ul class="footer-links-list">
+                        <!-- ✅ POINTS TO /tenders NOW -->
+                        <li><a href="/tenders" class="footer-link-item">All Tenders</a></li>
+                        <li><a href="/premium" class="footer-link-item">Premium Plan</a></li>
+                        <li><a href="#features-section" class="footer-link-item">Features</a></li>
+                        <li><a href="/favorites" class="footer-link-item">My Favorites</a></li>
+                    </ul>
+                </div>
+
+
+                <!-- Company Links -->
+                <div class="footer-links-section footer-company-links">
+                    <h4 class="footer-links-title">Company</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="/about" class="footer-link-item">About Us</a></li>
+                        <li><a href="/contact" class="footer-link-item">Contact</a></li>
+                        <li><a href="/careers" class="footer-link-item">Careers</a></li>
+                        <li><a href="/blog" class="footer-link-item">Blog</a></li>
+                    </ul>
+                </div>
+
+
+                <!-- Legal Links -->
+                <div class="footer-links-section footer-legal-links">
+                    <h4 class="footer-links-title">Legal</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="/privacy" class="footer-link-item">Privacy Policy</a></li>
+                        <li><a href="/terms" class="footer-link-item">Terms of Service</a></li>
+                        <li><a href="/refund" class="footer-link-item">Refund Policy</a></li>
+                        <li><a href="/security" class="footer-link-item">Security</a></li>
+                    </ul>
+                </div>
             </div>
-            <p class="text-2xl mb-8 opacity-90 max-w-4xl mx-auto">© 2026 TenderHub India. Aggregating 150+ government eProcurement portals for maximum efficiency.</p>
-            <p class="text-xl opacity-75 mb-12">
-                BCA Final Year Project 2025-2026 | Vivekanand College, Kolhapur<br>
-                Mr. Dharmendra N. Vaishnav (1874/D) & Ms. Pratiksha D. Turambe (1871/D)
-            </p>
-            <div class="flex flex-wrap justify-center gap-8 text-xl mb-8">
-                <span>Built with ❤️ using Flask + Firebase + Playwright + AI</span>
-                <span class="flex items-center space-x-2"><i class="fas fa-bolt text-yellow-400"></i><span>Lightning Fast</span></span>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom-section">
+                <div class="footer-bottom-content">
+                    <div class="footer-tech-stack">
+                        <span>Built with ❤️ using</span>
+                        <span class="footer-tech-badge">
+                            <i class="fas fa-bolt"></i>
+                            Flask + Firebase + AI
+                        </span>
+                    </div>
+                    <div class="footer-bottom-right">
+                        <span class="footer-copyright">© 2026 TenderHub India. All rights reserved.</span>
+                        <a href="/premium" class="footer-upgrade-btn">
+                            <i class="fas fa-crown"></i>
+                            Upgrade to Pro →
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-divider"></div>
+                <p class="footer-trust-badge">Trusted by 500+ contractors across India | Lightning Fast • Enterprise
+                    Grade • 99.9% Uptime</p>
             </div>
-            <div class="h-px w-32 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-8"></div>
-            <div class="flex flex-wrap justify-center gap-8 text-lg opacity-75">
-                <a href="/privacy" class="hover:text-blue-300 transition-colors">Privacy</a>
-                <a href="/terms" class="hover:text-blue-300 transition-colors">Terms</a>
-                <a href="/contact" class="hover:text-blue-300 transition-colors">Contact</a>
-                <a href="/premium" class="hover:text-yellow-300 transition-colors font-semibold">Upgrade to Pro →</a>
-            </div>
-        </div>
     </footer>
 
-    <!-- Firebase + Enhanced JS -->
-    <script type="module">
-        // Add these custom CSS animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes blob {
-                0% { transform: translate(0px, 0px) scale(1); }
-                33% { transform: translate(20px, -40px) scale(1.1); }
-                66% { transform: translate(-20px, 20px) scale(0.9); }
-                100% { transform: translate(0px, 0px) scale(1); }
+
+    <script>
+        // 🔥 PERFECT RESPONSIVE AUTH NAVBAR SCRIPT - FIXED LOGIC
+
+        class TenderHubAuth {
+            constructor() {
+                this.userKey = 'tenderhub_user';
+                this.isMobileMenuOpen = false;
+                this.init();
             }
-            .animate-blob { animation: blob 7s infinite; }
-            @keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-            .animate-spin-slow { animation: spin-slow 3s linear infinite; }
-        `;
-        document.head.appendChild(style);
 
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com/",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-        const googleProvider = new GoogleAuthProvider();
-        let currentUser = null;
-
-        // DOM Elements
-        const authBtn = document.getElementById('authBtn');
-        const authModal = document.getElementById('authModal');
-        const authForm = document.getElementById('authForm');
-        const userDropdown = document.getElementById('userDropdown');
-        const emailInput = document.getElementById('emailInput');
-        const passwordInput = document.getElementById('passwordInput');
-
-        // Pricing Toggle
-        const toggleBilling = document.getElementById('toggleBilling');
-        toggleBilling.onclick = () => {
-            const isAnnual = toggleBilling.textContent.includes('Annual');
-            if (isAnnual) {
-                document.getElementById('freePrice').innerHTML = '₹0 <span class="text-3xl text-slate-500 font-normal">/month</span>';
-                document.getElementById('premiumPrice').innerHTML = '₹79 <span class="text-3xl font-normal">/month</span>';
-                toggleBilling.textContent = 'Monthly';
-            } else {
-                document.getElementById('freePrice').innerHTML = '₹0 <span class="text-3xl text-slate-500 font-normal">/month</span>';
-                document.getElementById('premiumPrice').innerHTML = '₹99 <span class="text-3xl font-normal">/month</span>';
-                toggleBilling.textContent = 'Annual (Save 20%)';
+            init() {
+                this.checkAuthState();
+                this.bindEvents();
+                this.handleResponsive();
+                window.addEventListener('resize', () => this.handleResponsive());
             }
-        };
 
-        // Auth State Observer
-        onAuthStateChanged(auth, async (user) => {
-            currentUser = user;
-            if (user) {
-                document.getElementById('authIcon').className = 'fas fa-user text-2xl text-white';
-                document.getElementById('authText').textContent = user.displayName?.split(' ')[0] || user.email?.split('@')[0];
-                authBtn.classList.add('bg-white/20', 'border', 'border-white/50');
-                document.getElementById('userName').textContent = user.displayName || user.email?.split('@')[0];
-                document.getElementById('userEmail').textContent = user.email;
-                loadUserStats(user.uid);
-            } else {
-                document.getElementById('authIcon').className = 'fas fa-user-circle text-2xl';
-                document.getElementById('authText').textContent = 'Sign In';
-                authBtn.classList.remove('bg-white/20', 'border', 'border-white/50');
-            }
-        });
 
-        function loadUserStats(uid) {
-            const userRef = ref(db, `users/${uid}`);
-            onValue(userRef, (snapshot) => {
-                const data = snapshot.val();
-                document.getElementById('favoritesCount').textContent = data?.favorites?.length || 0;
-            });
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            authBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (currentUser) {
-                    userDropdown.classList.toggle('hidden');
-                } else {
-                    authModal.classList.remove('hidden');
-                }
-            });
-
-            document.getElementById('closeModal').onclick = () => authModal.classList.add('hidden');
-            authModal.onclick = (e) => { if (e.target === authModal) authModal.classList.add('hidden'); };
-
-            authForm.onsubmit = async (e) => {
-                e.preventDefault();
-                const email = emailInput.value.trim();
-                const password = passwordInput.value.trim();
-
+            checkAuthState() {
                 try {
-                    if (document.getElementById('modalTitle').textContent.includes('Welcome')) {
-                        await signInWithEmailAndPassword(auth, email, password);
-                    } else {
-                        const credential = await createUserWithEmailAndPassword(auth, email, password);
-                        await set(ref(db, `users/${credential.user.uid}`), {
-                            email, plan: 'starter', createdAt: Date.now(),
-                            favorites: [], searchHistory: []
-                        });
-                    }
-                    authModal.classList.add('hidden');
-                    authForm.reset();
-                    showToast('Welcome to TenderHub!', 'success');
-                } catch (error) {
-                    showToast(error.message, 'error');
+                    const userData = localStorage.getItem(this.userKey);
+                    this.currentUser = userData ? JSON.parse(userData) : null;
+                    this.updateAuthUI();
+                } catch (e) {
+                    this.currentUser = null;
+                    this.updateAuthUI();
                 }
-            };
+            }
 
-            document.getElementById('googleSignIn').onclick = async () => {
-                try {
-                    await signInWithPopup(auth, googleProvider);
-                    authModal.classList.add('hidden');
-                } catch (error) {
-                    showToast('Google sign in failed', 'error');
+
+            updateAuthUI() {
+                const isLoggedIn = !!this.currentUser;
+
+
+                // 🔥 DESKTOP AUTH - PERFECT LOGIC
+                const desktopSignin = document.getElementById('desktopSignin');
+                const desktopProfile = document.getElementById('desktopProfile');
+                const desktopProfileName = document.getElementById('desktopProfileName');
+
+
+                if (desktopSignin) {
+                    desktopSignin.style.display = isLoggedIn ? 'none' : 'flex';
                 }
-            };
-
-            document.getElementById('signoutBtn').onclick = async () => {
-                await signOut(auth);
-                userDropdown.classList.add('hidden');
-                showToast('Signed out successfully', 'success');
-            };
-
-            document.getElementById('toggleAuthMode').onclick = () => {
-                const title = document.getElementById('modalTitle');
-                const btnText = document.getElementById('authBtnText');
-                if (title.textContent.includes('Welcome')) {
-                    title.textContent = 'Create Account';
-                    btnText.textContent = 'Create Account';
-                    document.getElementById('toggleText').textContent = 'Already have account? ';
-                    document.getElementById('toggleAuthMode').innerHTML = 'Already have account? <strong>Sign In</strong>';
-                } else {
-                    title.textContent = 'Welcome Back';
-                    btnText.textContent = 'Sign In';
-                    document.getElementById('toggleText').textContent = "Don't have an account? ";
-                    document.getElementById('toggleAuthMode').innerHTML = "Don't have an account? <strong>Join Now</strong>";
+                if (desktopProfile) {
+                    desktopProfile.style.display = isLoggedIn ? 'block' : 'none';
                 }
-            };
+                if (desktopProfileName && this.currentUser) {
+                    desktopProfileName.textContent = this.currentUser.displayName ||
+                        this.currentUser.email?.split('@')[0] || 'Profile';
+                }
 
-            // Smooth scrolling & Navbar effects
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
+
+                // 🔥 MOBILE AUTH - PERFECT LOGIC
+                const mobileSignin = document.getElementById('mobileSignin');
+                const mobileProfile = document.getElementById('mobileProfile');
+                const mobileProfileName = document.getElementById('mobileProfileName');
+
+
+                if (mobileSignin) {
+                    mobileSignin.style.display = isLoggedIn ? 'none' : 'flex';
+                }
+                if (mobileProfile) {
+                    mobileProfile.style.display = isLoggedIn ? 'block' : 'none';
+                }
+                if (mobileProfileName && this.currentUser) {
+                    mobileProfileName.textContent = this.currentUser.displayName ||
+                        this.currentUser.email?.split('@')[0] || 'Profile';
+                }
+            }
+
+
+            login(userData) {
+                localStorage.setItem(this.userKey, JSON.stringify(userData));
+                this.currentUser = userData;
+                this.updateAuthUI();
+                this.showToast('Welcome back! 🎉', 'success');
+            }
+
+
+            logout() {
+                if (confirm('Logout from TenderHub? All session data will be cleared.')) {
+                    localStorage.removeItem(this.userKey);
+                    this.currentUser = null;
+                    this.updateAuthUI();
+                    this.showToast('Logged out successfully! 👋', 'success');
+                }
+            }
+
+
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `fixed top-4 right-4 z-[10000] px-6 py-3 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center space-x-2 transform translate-x-full transition-all duration-300 backdrop-blur-md ${type === 'success' ? 'bg-emerald-500/90' : 'bg-slate-500/90'
+                    }`;
+                toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i><span>${message}</span>`;
+
+                document.body.appendChild(toast);
+                setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(full)';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+
+            bindEvents() {
+                // 🔥 AUTH EVENTS
+                document.getElementById('desktopLogout')?.addEventListener('click', (e) => {
                     e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                    this.logout();
                 });
-            });
+                document.getElementById('mobileLogout')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
 
-            window.addEventListener('scroll', () => {
-                const navbar = document.getElementById('navbar');
-                if (window.scrollY > 100) {
-                    navbar.style.background = 'rgba(30, 58, 138, 0.95)';
-                    navbar.style.backdropFilter = 'blur(25px)';
-                } else {
-                    navbar.style.background = 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%)';
-                    navbar.style.backdropFilter = 'none';
-                }
-            });
 
-            // Intersection Observer for animations
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
+                // 🔥 DESKTOP PROFILE DROPDOWN
+                document.getElementById('desktopProfileTrigger')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const dropdown = document.getElementById('desktopProfileDropdown');
+                    dropdown?.classList.toggle('show');
+                });
+
+
+                // 🔥 MOBILE MENU
+                document.getElementById('mobileToggle')?.addEventListener('click', () => {
+                    this.toggleMobileMenu();
+                });
+                document.getElementById('mobileClose')?.addEventListener('click', () => {
+                    this.closeMobileMenu();
+                });
+
+
+                // 🔥 Close mobile menu on outside click
+                document.addEventListener('click', (e) => {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const mobileToggle = document.getElementById('mobileToggle');
+                    const desktopProfile = document.getElementById('desktopProfile');
+
+                    if (mobileMenu && mobileToggle && !mobileMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+                        this.closeMobileMenu();
+                    }
+                    if (desktopProfile && !desktopProfile.contains(e.target)) {
+                        document.getElementById('desktopProfileDropdown')?.classList.remove('show');
                     }
                 });
-            });
 
-            document.querySelectorAll('.fade-in-up').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(40px)';
-                el.style.transition = 'all 0.8s ease-out';
-                observer.observe(el);
+
+                // 🔥 Close mobile menu on link click
+                document.querySelectorAll('.navbar-mobile-link').forEach(link => {
+                    link.addEventListener('click', () => this.closeMobileMenu());
+                });
+            }
+
+
+            toggleMobileMenu() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                this.isMobileMenuOpen = !this.isMobileMenuOpen;
+                mobileMenu?.classList.toggle('hidden');
+                document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : '';
+            }
+
+
+            closeMobileMenu() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                this.isMobileMenuOpen = false;
+                mobileMenu?.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+
+
+            handleResponsive() {
+                const isMobile = window.innerWidth <= 768;
+                const desktopMenu = document.querySelector('.navbar-desktop-menu');
+                const mobileToggle = document.querySelector('.navbar-mobile-toggle');
+                const mobileMenu = document.querySelector('.navbar-mobile-menu');
+
+
+                if (isMobile) {
+                    if (desktopMenu) desktopMenu.style.display = 'none';
+                    if (mobileToggle) mobileToggle.style.display = 'flex';
+                    if (mobileMenu) mobileMenu.style.display = 'block';
+                    this.closeMobileMenu();
+                } else {
+                    if (desktopMenu) desktopMenu.style.display = 'flex';
+                    if (mobileToggle) mobileToggle.style.display = 'none';
+                    if (mobileMenu) mobileMenu.style.display = 'block';
+                }
+            }
+        }
+
+
+        // 🔥 ALL OTHER ANIMATIONS (UNCHANGED)
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('scroll-anim-show'), index * 150);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+
+
+        document.querySelectorAll('.scroll-reveal-anim').forEach(el => scrollObserver.observe(el));
+
+
+        // Counter animations
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target.querySelector('.stat-number-main');
+                    const target = parseInt(counter.dataset.target);
+                    let current = 0;
+                    const increment = target / 60;
+
+
+                    const updateCounter = () => {
+                        if (current < target) {
+                            current += increment;
+                            counter.textContent = Math.floor(current) + (target === 999 ? '.9%' : '');
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.textContent = target + (target === 999 ? '.9%' : target === 75 ? 'L Cr' : '');
+                        }
+                    };
+                    updateCounter();
+                }
             });
         });
 
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast p-8 rounded-4xl shadow-4xl text-white font-bold text-xl flex items-center space-x-4 ${
-                type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-emerald-600' : 'gradient-primary'
-            }`;
-            toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-triangle' : type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} text-2xl"></i>${message}`;
-            document.getElementById('toastContainer').appendChild(toast);
 
-            setTimeout(() => toast.style.transform = 'translateX(0)', 100);
-            setTimeout(() => {
-                toast.style.transform = 'translateX(400px)';
-                setTimeout(() => toast.remove(), 400);
-            }, 4500);
-        }
+        document.querySelectorAll('.stat-item-main').forEach(el => counterObserver.observe(el));
+
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar-main');
+            if (window.scrollY > 100) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+
+
+        // Pricing toggle
+        document.getElementById('pricingToggleBtn')?.addEventListener('click', () => {
+            const isAnnual = document.getElementById('pricingToggleBtn').textContent.includes('Annual');
+            const starterPrice = document.getElementById('starterPrice');
+            const proPrice = document.getElementById('proPrice');
+            const toggleBtn = document.getElementById('pricingToggleBtn');
+
+
+            if (isAnnual) {
+                starterPrice.innerHTML = '₹0 <span class="pricing-price-period">/month</span>';
+                proPrice.innerHTML = '₹74 <span class="pricing-price-period">/month</span><br><small>(₹888/year)</small>';
+                toggleBtn.textContent = 'Monthly';
+            } else {
+                starterPrice.innerHTML = '₹0 <span class="pricing-price-period">/month</span>';
+                proPrice.innerHTML = '₹99 <span class="pricing-price-period">/month</span>';
+                toggleBtn.textContent = 'Annual (Save 25%)';
+            }
+        });
+
+
+        // 🔥 INITIALIZE EVERYTHING
+        const auth = new TenderHubAuth();
+
+
+        // 🔥 TEST COMMANDS
+        window.tenderhub = {
+            login: (name = 'Amit Sharma', email = 'amit@test.com') => {
+                auth.login({ displayName: name, email, uid: 'test-123' });
+            },
+            logout: () => auth.logout(),
+            status: () => console.log('User:', auth.currentUser)
+        };
+
+
+        console.log('🚀 TenderHub - PERFECT AUTH + RESPONSIVE!');
+        console.log('✅ Test: window.tenderhub.login("Your Name", "email@test.com")');
     </script>
 </body>
+
 </html>
